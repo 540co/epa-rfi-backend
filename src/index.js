@@ -34,6 +34,7 @@ var patchRepo = Container.resolve('PatchRepository');
 // app.use(require('./Routes/Schemas')(router, Responder, schemaRepo));
 app.use(require('./Routes/Records.js')(router, Responder, recordRepo));
 app.use(require('./Routes/Events.js')(router, Responder, patchRepo));
+app.use(require('./Routes/Versions.js')(router, Responder, patchRepo));
 
 app.get(function(err, req, res, next){
   Responder(res).respondNotFound("no found");

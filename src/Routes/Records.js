@@ -92,33 +92,5 @@ module.exports = function(router, Responder, Repo){
     });
   });
 
-  // All Versions
-  router.get('/resources/:type/:id/versions', function(req, res){
-    Repo.getVersions(req.params.type, req.params.id, function(error, response){
-      if(! error){
-        Responder(res)
-          .setMeta({
-            total: response.length
-          })
-          .respondOk(response);
-      }else{
-        errorHandler(error, res);
-      }
-    });
-  });
-
-
-  // Specific Version
-  router.get('/resources/:type/:id/versions/:version', function(req, res){
-    Repo.findVersion(req.params.type, req.params.id, req.params.version, function(error, response){
-      if(! error){
-        Responder(res).respondOk(response);
-      }else{
-        errorHandler(error, res);
-      }
-    });
-  });
-
-
   return router;
 }

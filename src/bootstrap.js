@@ -54,7 +54,8 @@ Container.bindShared('PatchRepository', function(container){
   var PatchRepository = require('./Repositories/PatchRepository');
   var client = container.resolve('client');
   var transformer = container.resolve('ElasticTransformer');
-  return new PatchRepository(client, transformer);
+  var JsonPatcher = container.resolve('JsonPatcher');
+  return new PatchRepository(client, transformer, JsonPatcher);
 });
 
 Container.bindShared('RecordsRepository', function(container){
@@ -80,5 +81,6 @@ var resourceSubscriber = Container.resolve('ResourceSubscriber');
 
 Dispatcher.subscribe('ResourceWasCreated', resourceSubscriber);
 Dispatcher.subscribe('ResourceWasUpdated', resourceSubscriber);
+Dispatcher.subscribe('ResourceWasDeleted', resourceSubscriber);
 
 module.exports = Container;

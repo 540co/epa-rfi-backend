@@ -1,6 +1,6 @@
 var Patch = require('../Models/Patch.js');
 
-function PatchRepository(client, Transformer){
+function PatchRepository(client, Transformer, JsonPatcher){
 
   var _index = 'events';
   var _type = 'patches';
@@ -9,6 +9,7 @@ function PatchRepository(client, Transformer){
 
   this._client = client;
   this._transformer = Transformer;
+  this._jsonPatcher = JsonPatcher;
 
 
   var _setMeta = function(total, limit, offset){
@@ -58,12 +59,31 @@ function PatchRepository(client, Transformer){
     });
   }
 
-  this.getVersions = function(resource, id, callback){
-    var q = "resource:" + resource + " AND resource_id:" + id;
-    this.query({q: q}, function(e, res){
+  this.getVersions = function(resource, resource_id, callback){
+    var q = "resource:" + resource + " AND resource_id:" + resource_id;
+    this.query({q: q}, function(e, events){
       if(! e){
-        //
+        var versions = [];
+        var patchVersions = [];
+
+        // Sort by time
+        events = events.sort(function(a,b){
+          return a.time - b.time;
+        });
+
+        var obj = {};
+        events.forEach(function(event, index){
+          var patches = event.up;
+          var v = self._jsonPatcher.patchJson(obj, patches);
+          obj = v;
+          v._version = index + 1;
+          v._created_at = event.time;
+          v._id = resource_id;
+          versions.push( v );
+        });
       }
+
+      callback(e, versions);
     });
   }
 }
