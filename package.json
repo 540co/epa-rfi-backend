@@ -1,0 +1,23 @@
+{
+  "name": "bigcropping-api",
+  "version": "0.0.1",
+  "description": "JSON Schema data store using Elastic Search",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "Aaron Bullard <aaron@540.co>",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "elasticsearch": "^10.0.1",
+    "express": "^4.13.3",
+    "express-response-facade": "^1.0.1",
+    "fast-json-patch": "^0.5.4",
+    "model-transformer": "0.0.2",
+    "swaggerize-ui": "^1.0.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.3.2",
+    "node-model-factory": "^1.0.0"
+  }
+}

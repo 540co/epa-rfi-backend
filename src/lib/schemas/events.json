@@ -1,0 +1,24 @@
+{
+  "title": "Event",
+  "description": "A JSON Schema describing a Resource Event object.",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "/schemas/events.json",
+  "type": "object",
+  "properties": {
+    "_id": {"type": "string"},
+    "resource_id": {"type": "string"},
+    "resource": {"type": "string"},
+    "event_type": {
+      "enum": ["create", "update", "delete"]
+    },
+    "time": {"type": "long"},
+    "up": {
+      "type": "array",
+      "items": [{"$ref": "/schemas/jsonpatch.json"}]
+    },
+    "down": {
+      "type": "array",
+      "items": [{"$ref": "/schemas/jsonpatch.json"}]
+    }
+  }
+}
