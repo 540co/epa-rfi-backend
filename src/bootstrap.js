@@ -58,12 +58,18 @@ Container.bindShared('PatchRepository', function(container){
   return new PatchRepository(client, transformer, JsonPatcher);
 });
 
-Container.bindShared('RecordsRepository', function(container){
-  var RecordsRepository = require('./Repositories/RecordsRepository');
+Container.bindShared('ResourcesRepository', function(container){
+  var ResourcesRepository = require('./Repositories/ResourcesRepository');
   var ElasticRepository = container.resolve('ElasticRepository');
   var RecordsTransformer = container.resolve('RecordsTransformer');
   var Dispatcher = container.resolve('Dispatcher');
-  return new RecordsRepository(ElasticRepository, RecordsTransformer, Dispatcher);
+  return new ResourcesRepository(ElasticRepository, RecordsTransformer, Dispatcher);
+});
+
+Container.bindShared('SchemasRepository', function(container){
+    var SchemasRepository = require('./Repositories/SchemasRepository');
+    var client = container.resolve('client');
+    return new SchemasRepository(client);
 });
 
 // Listeners

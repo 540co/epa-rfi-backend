@@ -1,4 +1,6 @@
-function SchemasRepository(){
+function SchemasRepository(client){
+
+  this._client = client;
 
   var _capitalizeFirstLetter = function(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
@@ -58,10 +60,4 @@ function SchemasRepository(){
 
 }
 
-module.exports = function(elasticRepo){
-  SchemasRepository.prototype = elasticRepo;
-  
-  SchemasRepository.construct = SchemasRepository;
-
-  return SchemasRepository;
-}
+module.exports = SchemasRepository;

@@ -2,7 +2,7 @@ var ResourceWasCreated = require('../Events/ResourceWasCreated.js');
 var ResourceWasUpdated = require('../Events/ResourceWasUpdated.js');
 var ResourceWasDeleted = require('../Events/ResourceWasDeleted.js');
 
-function RecordsRepository(ElasticRepo, RecordTransformer, Dispatcher){
+function ResourcesRepository(ElasticRepo, RecordTransformer, Dispatcher){
 
   var self = this;
 
@@ -80,4 +80,4 @@ function RecordsRepository(ElasticRepo, RecordTransformer, Dispatcher){
   }
 }
 
-module.exports = RecordsRepository;
+module.exports = ResourcesRepository;
