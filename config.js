@@ -8,6 +8,8 @@ module.exports = {
         levels: ['error', 'warning']
       }]
     }
-  }
+  },
+
+  debug: true
 
 }

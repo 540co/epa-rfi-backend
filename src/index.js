@@ -1,8 +1,10 @@
 var express = require('express');
 var app = express();
 var Container = require('./bootstrap.js');
+var Responder = Container.resolve('Responder');
 var bodyParser = require('body-parser');
 var swaggerUi = require('swaggerize-ui');
+var csv = require('csv-to-json');
 
 
 //*
@@ -14,17 +16,10 @@ app.use(function(req, res, next){
 
 app.use( bodyParser.json() );
 
-app.use('/api-docs', function (req, res) {
-  res.json(require('./Swagger/swagger'));
-});
 
-app.use('/docs', swaggerUi({
-  docs: '/api-docs' // from the express route above.
-}));
 
 // Routes
 var router = express.Router();
-var Responder = Container.resolve('Responder');
 var schemaRepo = Container.resolve('SchemasRepository');
 var resourceRepo = Container.resolve('ResourcesRepository');
 var patchRepo = Container.resolve('PatchRepository');
@@ -34,15 +29,33 @@ app.use(require('./Routes/Schemas.js')(router, Responder, schemaRepo));
 app.use(require('./Routes/Resources.js')(router, Responder, resourceRepo));
 app.use(require('./Routes/Events.js')(router, Responder, patchRepo));
 app.use(require('./Routes/Versions.js')(router, Responder, patchRepo));
+app.use(require('./Routes/Swagger.js')(router, swaggerUi));
 
 
 
-// app.use(function(err, req, res, next){
-//   if(err){
-//     Responder(res).respondNotFound();
-//   }
-//   next();
-// });
+// 404 catch
+app.use(function(req, res, next){
+    Responder(res).respondNotFound();
+  next();
+});
+
+
+// 500 catch
+app.use(function(err, req, res, next){
+  var message = null;
+  var errors = {};
+
+  // if in debug mode
+  if(Container.resolve('config').debug){
+    message = err.message;
+    errors = {
+      message: err.toString(),
+      stack: err.stack
+    };
+  }
+
+  Responder(res).respondInternalError(message, errors);
+});
 
 
 
