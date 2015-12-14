@@ -1,44 +1,86 @@
-/*
-var config = require('../../config');
-var elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client(config.db.elastic);
-var Dispatcher = require('../../src/Core/Events/EventBus.js');
-var Transformer = require('model-transformer');
-var ElasticTransformer = require('../../src/Transformers/ElasticTransformer')(Transformer);
-var RecordsTransformer = require('../../src/Transformers/RecordsTransformer')(Transformer);
-var JsonPatcher = require('../../src/Services/JsonPatcher')(require('fast-json-patch'));
-var ElasticRepository = require('../../src/Repositories/ElasticRepository');
-var elasticRepo = new ElasticRepository(client, ElasticTransformer);
-var RecordsRepository = require('../../src/Repositories/RecordsRepository');
+//*/
+var Container = require('../../src/bootstrap.js');
+var repo = Container.ResourcesRepository;
+var factory = Container.factory;
 
-var repo = new RecordsRepository(elasticRepo, RecordsTransformer, JsonPatcher, Dispatcher);
+fdescribe("RecordsRespository", function(){
 
-describe("RescordsRespository", function(){
+  beforeAll(function(done){
+    repo.deleteResource('people', function(error, response){
+      var people = factory.times(20).make('Person');
+      people.forEach(function(person, index){
+        if(index < 19){
+          repo.save('people', person, function(){});
+        }else{
+          repo.save('people', person, function(err, data){
+            done();
+          });
+        }
+      });
+    });
+  });
 
-  var person = {
-    first: "James",
-    last: "Bullard",
-    age: '38'
-  };
 
-//*
-  beforeEach(function(done){
+  describe("CRUD operations", function(){
+
+    var person = {};
+
+    it('gets a list', function(done){
+      repo.get('people', 15, 0, function(err, data){
+        expect(data.length).toEqual(15);
+        expect(data[0].hasOwnProperty('firstName')).toEqual(true);
+        done();
+      });
+    });
+
+    it('saves', function(done){
+      person = {
+        firstName: 'Aaron',
+        lastName: 'Bullard',
+        age: 38
+      };
+
+      repo.save('people', person, function(err, data){
+        person = data;
+        expect(data.firstName).toEqual('Aaron');
+        done();
+      });
+    });
+
+    it('finds by id', function(done){
+      repo.findById('people', person._id, function(error, data){
+        expect(person._id == data._id).toEqual(true);
+        done();
+      });
+    });
+
+
+    it('updates', function(done){
+      person.firstName = 'Bob';
+      repo.update('people', person, function(error, data){
+        expect(data.firstName).toEqual('Bob');
+        done();
+      });
+    });
+
+
+    it('deletes', function(done){
+      repo.delete('people', person, function(err, response){
+        expect(response).toEqual({success: true});
+        done();
+      });
+    });
+
+  }); // end CRUD
+
+  afterAll(function(done){
     repo.deleteResource('people', function(error, response){
       done();
     });
   });
 
-  it("saves an object", function(done){
-    repo.save('people', person, function(error, response){
-      expect( response.hasOwnProperty('_id') ).toEqual( true );
-      // Retrieve it back
-      repo.findById('people', response._id, function(error, obj){
-        expect( obj ).toEqual( response );
-        done();
-      });
-    });
-  });
 
+/*/
   it("saves versions", function(done){
     repo.save('people', person, function(e, record){
       record.age = '39';
@@ -90,6 +132,7 @@ describe("RescordsRespository", function(){
     });
   });
 
+
   it("fires ResourceWasCreated on save", function(done){
     var listenerWasCalled = false;
 
@@ -120,6 +163,7 @@ describe("RescordsRespository", function(){
       });
     });
   });
+//*/
+
 
 });
-*/

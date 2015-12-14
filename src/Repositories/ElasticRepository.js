@@ -91,11 +91,18 @@ function ElasticRepository(client, ElasticTransformer){
 
 
   this.save = function(record, callback){
-    this._client.create({
+    var options = {
       index: _index,
       type: _type,
       body: record
-    }, function(error, response){
+    };
+
+    // Is id present
+    if(record.hasOwnProperty('_id')){
+      options.id = record._id;
+    }
+
+    this._client.create(options, function(error, response){
       if(! error){
         _meta = {};
         record._id = response._id; // Is this smart?

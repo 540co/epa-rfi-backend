@@ -66,17 +66,30 @@ module.exports = function(router, Responder, Repo){
     var record = req.body;
 
     // If instance ID doesn't exist, create it TODO
-
-    if(record._id !== req.params.id){
-      throw new Error("ID parameters do not match.");
-    }
-
-    Repo.update(req.params.type, record, function(error, response){
-        if(! error){
-          Responder(res).setMeta(Repo.getMeta()).respondOk(response);
-        }else{
-          errorHandler(error, res);
+    Repo.findById(req.params.type, req.params.id, function(error, data){
+      if(! error){
+        if(record._id !== req.params.id){
+          throw new Error("ID parameters do not match.");
         }
+
+        Repo.update(req.params.type, record, function(error, response){
+            if(! error){
+              Responder(res).setMeta(Repo.getMeta()).respondOk(response);
+            }else{
+              errorHandler(error, res);
+            }
+        });
+      }
+      else{
+        // No such resource and id, so create one with this id
+        Repo.save(req.params.type, record, function(error, new_record){
+            if(! error){
+              Responder(res).setMeta(Repo.getMeta()).respondCreated(new_record);
+            }else{
+              errorHandler(error, res);
+            }
+        });
+      }
     });
   });
 

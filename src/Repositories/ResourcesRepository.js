@@ -1,20 +1,27 @@
 var ResourceWasCreated = require('../Events/ResourceWasCreated.js');
 var ResourceWasUpdated = require('../Events/ResourceWasUpdated.js');
 var ResourceWasDeleted = require('../Events/ResourceWasDeleted.js');
+var Repository = require('./Repository');
 
-function ResourcesRepository(ElasticRepo, RecordTransformer, Dispatcher){
+function ResourcesRepository(client, RecordTransformer, Dispatcher){
 
   var self = this;
+  var _index = null;
+  var _type = 'records';
 
-  this.repo = ElasticRepo;
+  this._client = client;
   this.transformer = RecordTransformer;
   this.dispatcher = Dispatcher;
 
-  var _setResource = function(resource){
-    self.repo.setIndex(resource);
-    self.repo.setType('records');
-    return self.repo;
-  };
+  var _getObject = function(response){
+    var obj = response._source;
+    obj._id = response._id;
+    return obj;
+  }
+
+  var _getList = function(response){
+    return response.hits.hits
+  }
 
   var _decorateCallback = function(callback){
     return function(error, response){
@@ -27,27 +34,52 @@ function ResourcesRepository(ElasticRepo, RecordTransformer, Dispatcher){
     }
   }
 
-  this.getMeta = function(){
-    return this.repo.getMeta();
-  };
 
   this.findById = function(resource, id, callback){
-    _setResource(resource).findById(id, _decorateCallback(callback));
+    this._client.get({
+      index: resource,
+      type: _type,
+      id: id
+    }, _decorateCallback(callback));
   };
 
   this.get = function(resource, limit, offset, callback){
-    _setResource(resource).get(limit, offset, _decorateCallback(callback));
+    this._client.search({
+      index: resource,
+      type: _type,
+      size: limit,
+      from: offset
+    }, function(error, response){
+      if(! error){
+        var list = response.hits.hits.map(function(obj){
+          return _getObject(obj);
+        });
+      }
+      return callback(error, list);
+    });
   }
 
   this.save = function(resource, record, callback){
-    _setResource(resource).save(record, function(error, response){
+    var options = {
+      index: resource,
+      type: _type,
+      body: record
+    };
 
+    // Is id present
+    if(record.hasOwnProperty('_id')){
+      options.id = record._id;
+    }
+
+    this._client.create(options, function(error, response){
       if(! error){
-        var data = self.transformer.Single(response);
-        self.dispatcher.fire(new ResourceWasCreated(resource, data));
+        self._meta = {};
+        record._id = response._id; // Is this smart?
       }
 
-      return callback(error, data);
+      self.dispatcher.fire(new ResourceWasCreated(resource, record));
+
+      callback(error, record);
     });
   }
 
@@ -58,26 +90,61 @@ function ResourcesRepository(ElasticRepo, RecordTransformer, Dispatcher){
       }, null);
     }
 
-    // Get orginal
-    _setResource(resource).findById(record._id, function(error, original){
+    var id = record._id;
 
-      self.dispatcher.fire(new ResourceWasUpdated(resource, original, record));
+    delete record._id;
 
-      _setResource(resource).update(record, _decorateCallback(callback));
+    this.findById(resource, id, function(error, data){
+      if(! error){
+        self._client.update({
+          index: resource,
+          type: _type,
+          id: id,
+          body: {
+            doc: record
+          }
+        }, function(err, response){
+          if(! err){
+            record._id = id;
+            self.dispatcher.fire(new ResourceWasCreated(resource, record));
+          }
+          callback(err, record);
+        });
+      }
     });
   }
 
   this.delete = function(resource, record, callback){
+    if(! record.hasOwnProperty('_id')){
+      callback({
+        error: "Record must have an '_id' property for delete."
+      }, null);
+    }
+
     var event = new ResourceWasDeleted(resource, record);
 
-    _setResource(resource).deleteById(record._id, function(error, response){
+    this._client.delete({
+      index: resource,
+      type: _type,
+      id: record._id
+    }, function(error, response){
       if(! error){
-        var data = self.transformer.Single(response);
         self.dispatcher.fire( event );
       }
-      return callback(error, data);
+      callback(error, {success: true});
     });
   }
+
+  this.deleteResource = function(resource, callback){
+    this._client.delete({
+      index: resource,
+      type: _type
+    }, callback);
+  }
 }
+
+ResourcesRepository.prototype = new Repository;
+
+ResourcesRepository.constructor = ResourcesRepository;
 
 module.exports = ResourcesRepository;

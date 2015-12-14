@@ -2,15 +2,12 @@ var Container = require('./Core/Container/Container.js');
 
 Container.singleton('config', require('../config'));
 
+Container.singleton('factory', require('./lib/factories/factories.js'));
+
 Container.register('Responder', function(){
   return require('express-response-facade');
 });
 
-Container.bindShared('elasticsearch', function(container){
-  var elasticsearch = require('elasticsearch');
-  var config = container.resolve('config');
-  return new elasticsearch.Client(config.db.elastic);
-});
 
 // Services
 Container.singleton('Dispatcher', require('./Core/Events/EventBus.js'));
@@ -60,10 +57,10 @@ Container.bindShared('PatchRepository', function(container){
 
 Container.bindShared('ResourcesRepository', function(container){
   var ResourcesRepository = require('./Repositories/ResourcesRepository');
-  var ElasticRepository = container.resolve('ElasticRepository');
+  var client = container.resolve('client');
   var RecordsTransformer = container.resolve('RecordsTransformer');
   var Dispatcher = container.resolve('Dispatcher');
-  return new ResourcesRepository(ElasticRepository, RecordsTransformer, Dispatcher);
+  return new ResourcesRepository(client, RecordsTransformer, Dispatcher);
 });
 
 Container.bindShared('SchemasRepository', function(container){
@@ -82,11 +79,13 @@ Container.bindShared('ResourceSubscriber', function(container){
 
 
 // Register listeners
-var Dispatcher = Container.resolve('Dispatcher');
-var resourceSubscriber = Container.resolve('ResourceSubscriber');
+if(Container.config.capture_versions){
+  var Dispatcher = Container.resolve('Dispatcher');
+  var resourceSubscriber = Container.resolve('ResourceSubscriber');
 
-Dispatcher.subscribe('ResourceWasCreated', resourceSubscriber);
-Dispatcher.subscribe('ResourceWasUpdated', resourceSubscriber);
-Dispatcher.subscribe('ResourceWasDeleted', resourceSubscriber);
+  Dispatcher.subscribe('ResourceWasCreated', resourceSubscriber);
+  Dispatcher.subscribe('ResourceWasUpdated', resourceSubscriber);
+  Dispatcher.subscribe('ResourceWasDeleted', resourceSubscriber);
+}
 
 module.exports = Container;

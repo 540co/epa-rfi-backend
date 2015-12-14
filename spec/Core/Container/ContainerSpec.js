@@ -1,6 +1,6 @@
 var Container = require('../../../src/Core/Container/Container.js');
 
-fdescribe('ContainerSpec', function(){
+describe('ContainerSpec', function(){
 
   it('registers factories', function(){
     function Person(){}

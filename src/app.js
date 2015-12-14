@@ -32,7 +32,6 @@ app.use(require('./Routes/Versions.js')(router, Responder, patchRepo));
 app.use(require('./Routes/Swagger.js')(router, swaggerUi));
 
 
-
 // 404 catch
 app.use(function(req, res, next){
     Responder(res).respondNotFound();
@@ -67,6 +66,6 @@ app.use(function(err, req, res, next){
 
 app.listen(3000);
 
-Container.singleton('app', app);
+Container.singleton('express', app);
 
 module.exports = Container;
