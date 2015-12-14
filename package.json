@@ -2,7 +2,7 @@
   "name": "bigcropping-api",
   "version": "0.0.1",
   "description": "JSON Schema data store using Elastic Search",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "jasmine"
   },

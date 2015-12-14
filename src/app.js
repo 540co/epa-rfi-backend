@@ -5,7 +5,7 @@ var Responder = Container.resolve('Responder');
 var bodyParser = require('body-parser');
 var swaggerUi = require('swaggerize-ui');
 var csv = require('csv-to-json');
-
+var HttpError = require('./Errors/HttpError.js');
 
 //*
 app.use(function(req, res, next){
@@ -54,9 +54,19 @@ app.use(function(err, req, res, next){
     };
   }
 
-  Responder(res).respondInternalError(message, errors);
+  if(err instanceof HttpError){
+    res.status(err.httpCode)
+    res.json(err.message);
+  }else{
+    Responder(res).respondInternalError(message, errors);
+  }
+
 });
 
 
 
 app.listen(3000);
+
+Container.singleton('app', app);
+
+module.exports = Container;

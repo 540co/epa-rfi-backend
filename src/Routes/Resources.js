@@ -1,3 +1,6 @@
+var UnprocessableEntityError = require('../Errors/UnprocessableEntityError.js');
+
+
 module.exports = function(router, Responder, Repo){
 
   var errorHandler = function(error, res){
@@ -62,13 +65,10 @@ module.exports = function(router, Responder, Repo){
   router.put('/resources/:type/:id', function (req, res) {
     var record = req.body;
 
-    // set _id property if not set
-    if(! record.hasOwnProperty('_id')){
-      record._id = req.params.id;
-    }
+    // If instance ID doesn't exist, create it TODO
 
     if(record._id !== req.params.id){
-      // throw new Error("ID parameters do not match.");
+      throw new Error("ID parameters do not match.");
     }
 
     Repo.update(req.params.type, record, function(error, response){

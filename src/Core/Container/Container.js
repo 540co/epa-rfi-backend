@@ -6,13 +6,31 @@ var Container = module.exports = {
 
   _instances: {},
 
+  _addProperty: function(prop){
+    var self = this;
+    this.__defineGetter__(prop, function(){
+      return self.resolve(prop);
+    });
+  },
+
   register: function(name, fn){
     if(typeof fn !== 'function'){
       throw new TypeError("'fn' must be a function.");
     }
 
+    this.unregister(name);
+
     this._factories[name] = fn;
+
+    this._addProperty(name);
+
     return this;
+  },
+
+  unregister: function(name){
+    delete this._factories[name];
+    delete this._sharedInstances[name];
+    delete this._instances[name];
   },
 
   bindShared: function(name, fn){
@@ -20,17 +38,28 @@ var Container = module.exports = {
       throw new TypeError("'fn' must be a function.");
     }
 
+    this.unregister(name);
+
     this._sharedInstances[name] = fn;
+
+    this._addProperty(name);
+
+    return this;
+  },
+
+  singleton: function(name, instance){
+
+    this.unregister(name);
+
+    this._instances[name] = instance;
+
+    this._addProperty(name);
+
     return this;
   },
 
   create: function(name){
     return this._factories[name](this);
-  },
-
-  singleton: function(name, instance){
-    this._instances[name] = instance;
-    return this;
   },
 
   getInstance: function(name){
