@@ -1,4 +1,5 @@
-var EventBus = require('../../../src/Core/Events/EventBus.js');
+var Container = require('../../../src/bootstrap.js');
+var EventBus = Container.EventBus;
 
 function ThingWasSavedEvent(param1, param2){
   this.param1 = param1;

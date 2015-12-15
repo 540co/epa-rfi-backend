@@ -1,25 +1,33 @@
 var Container = require('../../src/app.js');
-var express = Container.express;
+var app = Container.app;
 var request = require('supertest');
+var repo = Container.ResourcesRepository;
+var factory = Container.factory;
 
 
 describe('Resource Routes', function(){
 
   var person = {};
-
+/*/
   beforeAll(function(done){
-    Container.ResourcesRepository.save('people', {
-      firstName: 'Aaron',
-      lastName: 'Bullard',
-      age: 38
-    }, function(err, res){
-      person = res;
-      done();
+    repo.deleteResource('people', function(error, response){
+      var people = factory.times(20).make('Person');
+      people.forEach(function(person, index){
+        if(index < 19){
+          repo.save('people', person, function(){});
+        }else{
+          repo.save('people', person, function(err, data){
+            done();
+          });
+        }
+      });
     });
   });
 
+//*/
+//*/
   it('GET /resources/people', function(done){
-    request(express)
+    request(app)
       .get('/resources/people')
       .set('Accept', 'application/json')
       .expect(200)
@@ -32,7 +40,7 @@ describe('Resource Routes', function(){
       })
       .end(function(err, res){
         if (err){
-          console.log(err);
+          throw err;
         }
         done();
       });
@@ -40,7 +48,7 @@ describe('Resource Routes', function(){
 
 
   it('POST /resource/people', function(done){
-    request(express)
+    request(app)
     .post('/resources/people')
     .set('Accept', 'application/json')
     .send({
@@ -51,21 +59,19 @@ describe('Resource Routes', function(){
     .expect(201)
     .end(function(err, res){
       if(err){
-        console.log(err);
+        throw err;
       }
       expect(res.body.data.firstName).toEqual('Aaron');
       person = res.body.data;
-      Container.ResourcesRepository.delete('people', person, function(err, res){
-        done();
-      });
+      done();
     });
   });
 
 
-
   it('GET /resources/people/:id', function(done){
-    request(express)
+    request(app)
       .get('/resources/people/' + person._id)
+      .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
         expect(res.body.data._id == person._id).toEqual(true);
@@ -73,10 +79,42 @@ describe('Resource Routes', function(){
       });
   });
 
+
+  it('PUT /resources/people/:id', function(done){
+    person.age++;
+
+    request(app)
+      .put('/resources/people/' + person._id)
+      .set('Accept', 'application/json')
+      .send(person)
+      .expect(200)
+      .end(function(err, res){
+        expect(res.body.data.age).toEqual(person.age);
+        done();
+      });
+  });
+
+
+  it('DELETE /resources/people/:id', function(done){
+    request(app)
+      .delete('/resources/people/' + person._id)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end(function(err, res){
+        expect(res.body.data.success).toEqual(true);
+        done();
+      });
+  });
+//*/
+/*/
   afterAll(function(done){
-    Container.ResourcesRepository.delete('people', person, function(err, res){
+    repo.deleteResource('people', function(error, response){
+      if(error){
+        throw error;
+      }
       done();
     });
   });
+//*/
 
 });

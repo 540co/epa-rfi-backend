@@ -1,33 +1,47 @@
 var Container = require('./Core/Container/Container.js');
 
-Container.singleton('config', require('../config'));
+Container.instance('config', require('../config'));
 
-Container.singleton('factory', require('./lib/factories/factories.js'));
+Container.instance('factory', require('./lib/factories/factories.js'));
 
-Container.register('Responder', function(){
-  return require('express-response-facade');
+Container.instance('Responder', require('express-response-facade'));
+
+Container.bind('Subscriber', function(){
+  return require('./Core/Events/Subscriber.js');
 });
 
 
 // Services
-Container.singleton('Dispatcher', require('./Core/Events/EventBus.js'));
+Container.bind('express', function(){
+  return require('express');
+});
 
-Container.register('JsonPatcher', function(){
-  return require('./Services/JsonPatcher')(require('fast-json-patch'));
+Container.bindShared('app', function(container){
+  return container.express();
+});
+
+Container.instance('EventBus', require('./Core/Events/EventBus.js'));
+
+Container.instance('Dispatcher', Container.EventBus);
+
+Container.bind('JsonPatcher', function(){
+  var patcher = require('fast-json-patch');
+  var JsonPatcher = require('./Services/JsonPatcher');
+  return new JsonPatcher(patcher);
 });
 
 //Transformers
-Container.register('ElasticTransformer', function(){
+Container.bind('ElasticTransformer', function(){
   var Transformer = require('model-transformer');
   return require('./Transformers/ElasticTransformer')(Transformer);
 });
 
-Container.register('RecordsTransformer', function(){
+Container.bind('RecordsTransformer', function(){
   var Transformer = require('model-transformer');
   return require('./Transformers/RecordsTransformer')(Transformer);
 });
 
-Container.register('EventTransformer', function(){
+Container.bind('EventTransformer', function(){
   var Transformer = require('model-transformer');
   return require('./Transformers/EventTransformer')(Transformer);
 });
@@ -87,5 +101,12 @@ if(Container.config.capture_versions){
   Dispatcher.subscribe('ResourceWasUpdated', resourceSubscriber);
   Dispatcher.subscribe('ResourceWasDeleted', resourceSubscriber);
 }
+
+
+// Load Service Providers
+Container.config.service_providers.forEach(function(path){
+  var provider = require(path);
+  (new provider).register( Container );
+});
 
 module.exports = Container;

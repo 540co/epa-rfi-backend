@@ -86,6 +86,15 @@ function PatchRepository(client, Transformer, JsonPatcher){
       callback(e, versions);
     });
   }
+
+
+  this.deleteByResource = function(resource, callback){
+    this._client.delete({
+      index: _index,
+      type: _type,
+      q: "resource:" + resource
+    }, callback);
+  }
 }
 
 module.exports = PatchRepository;

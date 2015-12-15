@@ -11,7 +11,7 @@ function Subscriber(){
          this[method](event);
        }
        catch(e){
-         console.log("Subscriber Error: " + e.message);
+         console.log("Subscriber Error: " + e.message + "during event: " + eventName);
        }
      }
    }

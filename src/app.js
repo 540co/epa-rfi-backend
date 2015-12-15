@@ -1,7 +1,7 @@
-var express = require('express');
-var app = express();
 var Container = require('./bootstrap.js');
-var Responder = Container.resolve('Responder');
+var app = Container.app;
+var express = Container.express;
+var Responder = Container.Responder;
 var bodyParser = require('body-parser');
 var swaggerUi = require('swaggerize-ui');
 var csv = require('csv-to-json');
@@ -20,9 +20,9 @@ app.use( bodyParser.json() );
 
 // Routes
 var router = express.Router();
-var schemaRepo = Container.resolve('SchemasRepository');
-var resourceRepo = Container.resolve('ResourcesRepository');
-var patchRepo = Container.resolve('PatchRepository');
+var schemaRepo = Container.make('SchemasRepository');
+var resourceRepo = Container.make('ResourcesRepository');
+var patchRepo = Container.make('PatchRepository');
 
 
 app.use(require('./Routes/Schemas.js')(router, Responder, schemaRepo));
@@ -45,7 +45,7 @@ app.use(function(err, req, res, next){
   var errors = {};
 
   // if in debug mode
-  if(Container.resolve('config').debug){
+  if(Container.config.debug){
     message = err.message;
     errors = {
       message: err.toString(),
@@ -65,7 +65,5 @@ app.use(function(err, req, res, next){
 
 
 app.listen(3000);
-
-Container.singleton('express', app);
 
 module.exports = Container;

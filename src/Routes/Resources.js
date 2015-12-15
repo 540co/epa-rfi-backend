@@ -96,13 +96,23 @@ module.exports = function(router, Responder, Repo){
 
   // Delete
   router.delete('/resources/:type/:id', function (req, res) {
-    Repo.deleteById(req.params.type, req.params.id, function(error, response){
-        if(! error){
-          Responder(res).setMeta(Repo.getMeta()).respondOk(response);
-        }else{
-          errorHandler(error, res);
-        }
+    Repo.findById(req.params.type, req.params.id, function(error, record){
+      if(error){
+        throw error;
+      }else{
+        Repo.delete(req.params.type, record, function(error, response){
+            if(! error){
+              Responder(res).setMeta(Repo.getMeta()).respondOk(response);
+            }else{
+              errorHandler(error, res);
+            }
+        });
+      }
     });
+
+
+
+
   });
 
   return router;

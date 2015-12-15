@@ -18,7 +18,7 @@ var Container = module.exports = {
       throw new TypeError("'fn' must be a function.");
     }
 
-    this.unregister(name);
+    this.unbind(name);
 
     this._factories[name] = fn;
 
@@ -27,7 +27,11 @@ var Container = module.exports = {
     return this;
   },
 
-  unregister: function(name){
+  bind: function(name, fn){
+    return this.register(name, fn);
+  },
+
+  unbind: function(name){
     delete this._factories[name];
     delete this._sharedInstances[name];
     delete this._instances[name];
@@ -38,7 +42,7 @@ var Container = module.exports = {
       throw new TypeError("'fn' must be a function.");
     }
 
-    this.unregister(name);
+    this.unbind(name);
 
     this._sharedInstances[name] = fn;
 
@@ -47,9 +51,13 @@ var Container = module.exports = {
     return this;
   },
 
-  singleton: function(name, instance){
+  singleton: function(name, fn){
+    return this.bindShared(name, fn);
+  },
 
-    this.unregister(name);
+  instance: function(name, instance){
+
+    this.unbind(name);
 
     this._instances[name] = instance;
 
@@ -75,7 +83,7 @@ var Container = module.exports = {
     // Create singleton instance
     if(this._sharedInstances.hasOwnProperty(name)){
       var instance = this._sharedInstances[name](this);
-      this.singleton(name, instance);
+      this.instance(name, instance);
       return instance;
     }
 
@@ -85,6 +93,10 @@ var Container = module.exports = {
     }
 
     throw new Error("No service registered: '" + name + "'");
+  },
+
+  make: function(name){
+    return this.resolve(name);
   }
 
 }

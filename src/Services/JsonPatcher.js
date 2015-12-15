@@ -1,4 +1,4 @@
-module.exports = function(patcher){
+function JsonPatcher(patcher){
 
   var _getPatches = function(from, to){
     return patcher.compare(from, to);
@@ -15,3 +15,5 @@ module.exports = function(patcher){
     patchJson: _patchJson
   };
 }
+
+module.exports = JsonPatcher;

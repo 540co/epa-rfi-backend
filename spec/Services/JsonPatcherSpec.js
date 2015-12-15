@@ -1,4 +1,5 @@
-var JsonPatcher = require('../../src/Services/JsonPatcher')(require('fast-json-patch'));
+var Container = require('../../src/bootstrap.js');
+var JsonPatcher = Container.JsonPatcher;
 
 describe("JsonPatcher", function(){
 

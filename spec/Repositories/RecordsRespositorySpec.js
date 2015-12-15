@@ -1,27 +1,26 @@
-//*/
+/*/
 var Container = require('../../src/bootstrap.js');
 var repo = Container.ResourcesRepository;
 var factory = Container.factory;
 
-fdescribe("RecordsRespository", function(){
-
-  beforeAll(function(done){
-    repo.deleteResource('people', function(error, response){
-      var people = factory.times(20).make('Person');
-      people.forEach(function(person, index){
-        if(index < 19){
-          repo.save('people', person, function(){});
-        }else{
-          repo.save('people', person, function(err, data){
-            done();
-          });
-        }
-      });
-    });
-  });
-
+describe("RecordsRespository", function(){
 
   describe("CRUD operations", function(){
+
+    beforeAll(function(done){
+      repo.deleteResource('people', function(error, response){
+        var people = factory.times(20).make('Person');
+        people.forEach(function(person, index){
+          if(index < 19){
+            repo.save('people', person, function(){});
+          }else{
+            repo.save('people', person, function(err, data){
+              done();
+            });
+          }
+        });
+      });
+    });
 
     var person = {};
 
@@ -71,14 +70,18 @@ fdescribe("RecordsRespository", function(){
       });
     });
 
-  }); // end CRUD
 
-  afterAll(function(done){
-    repo.deleteResource('people', function(error, response){
-      done();
+    afterAll(function(done){
+      repo.deleteResource('people', function(error, response){
+        if(error){
+          throw error;
+        }
+        done();
+      });
     });
-  });
 
+  }); // end CRUD
+/*/
 
 /*/
   it("saves versions", function(done){
@@ -163,7 +166,8 @@ fdescribe("RecordsRespository", function(){
       });
     });
   });
-//*/
+
 
 
 });
+//*/

@@ -1,6 +1,7 @@
 var ResourceWasCreated = require('../Events/ResourceWasCreated.js');
 var ResourceWasUpdated = require('../Events/ResourceWasUpdated.js');
 var ResourceWasDeleted = require('../Events/ResourceWasDeleted.js');
+var EntireResourceWasDeleted = require('../Events/EntireResourceWasDeleted.js');
 var Repository = require('./Repository');
 
 function ResourcesRepository(client, RecordTransformer, Dispatcher){
@@ -51,6 +52,11 @@ function ResourcesRepository(client, RecordTransformer, Dispatcher){
       from: offset
     }, function(error, response){
       if(! error){
+        self._setMeta({
+          limit: limit,
+          offset: offset,
+          total: response.hits.total
+        });
         var list = response.hits.hits.map(function(obj){
           return _getObject(obj);
         });
@@ -69,6 +75,7 @@ function ResourcesRepository(client, RecordTransformer, Dispatcher){
     // Is id present
     if(record.hasOwnProperty('_id')){
       options.id = record._id;
+      delete record._id;
     }
 
     this._client.create(options, function(error, response){
@@ -136,10 +143,14 @@ function ResourcesRepository(client, RecordTransformer, Dispatcher){
   }
 
   this.deleteResource = function(resource, callback){
-    this._client.delete({
-      index: resource,
-      type: _type
-    }, callback);
+    this._client.indices.delete({
+      index: resource
+    }, function(err, res){
+      if(! err){
+        self.dispatcher.fire( new EntireResourceWasDeleted(resource) );
+      }
+      callback(err, res);
+    });
   }
 }
 

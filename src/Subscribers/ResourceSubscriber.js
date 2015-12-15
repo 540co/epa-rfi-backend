@@ -73,6 +73,17 @@ function ResourceSubscriber(PatchRepository, JsonPatcher){
     });
   }
 
+
+  this.whenEntireResourceWasDeleted = function(event){
+    var resource = event.resource;
+
+    _repo.deleteByResource(resource, function(e, res){
+      if(e){
+        throw e;
+      }
+    });
+  }
+
 }
 
 

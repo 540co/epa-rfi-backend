@@ -1,5 +1,6 @@
-var Subscriber = require('../../../src/Core/Events/Subscriber.js');
-var Dispatcher = require('../../../src/Core/Events/EventBus.js');
+var Container = require('../../../src/bootstrap.js');
+var Dispatcher = Container.EventBus;
+var Subscriber = Container.Subscriber;
 
 describe('Subscriber', function(){
 

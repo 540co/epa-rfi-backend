@@ -2,15 +2,15 @@ var Container = require('../../../src/Core/Container/Container.js');
 
 describe('ContainerSpec', function(){
 
-  it('registers factories', function(){
+  it('binds factories', function(){
     function Person(){}
 
-    Container.register('Person', function(){
+    Container.bind('Person', function(){
       return new Person();
     });
 
-    var person1 = Container.resolve('Person');
-    var person2 = Container.resolve('Person');
+    var person1 = Container.make('Person');
+    var person2 = Container.make('Person');
 
     // returns object of person
     expect(person1.constructor.name).toEqual('Person');
@@ -19,18 +19,18 @@ describe('ContainerSpec', function(){
   });
 
 
-  it('registers singletons', function(){
+  it('registers singleton instances', function(){
     function Person(name){
       this.name = name;
     }
 
-    Container.singleton('Person', new Person('Aaron'));
+    Container.instance('Person', new Person('Aaron'));
 
     var person = Container.resolve('Person');
     person.name = 'Bob';
 
     // returns same instance
-    expect(Container.resolve('Person').name).toEqual('Bob');
+    expect(Container.make('Person').name).toEqual('Bob');
   });
 
 
@@ -54,7 +54,7 @@ describe('ContainerSpec', function(){
   it('exposes resolve by properties', function(){
     function Person(){}
 
-    Container.register('Person', function(){
+    Container.bind('Person', function(){
       return new Person();
     });
 
@@ -63,7 +63,7 @@ describe('ContainerSpec', function(){
 
 
   it('unregisters bindings', function(){
-      Container.register('Obj', function(){
+      Container.bind('Obj', function(){
         return {
           a: 'a'
         };
@@ -72,7 +72,7 @@ describe('ContainerSpec', function(){
       expect( Container.Obj.a ).toEqual('a');
 
       // unregister
-      Container.unregister('Obj');
+      Container.unbind('Obj');
 
       var isUnregistered = false;
       try{

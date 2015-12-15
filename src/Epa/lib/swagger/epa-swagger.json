@@ -1,0 +1,482 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "EPA Toxic Release Inventory (TRI) Program",
+    "version": "1.0.0",
+    "title": "EPA TRI Program",
+    "termsOfService": "",
+    "contact": {
+      "email": "aaron@540.co"
+    }
+  },
+  "host": "",
+  "basePath": "/tri",
+  "tags": ["Releases", "Facilities", "Reports"],
+  "schema": [
+    "http", "https"
+  ],
+  
+  "paths": {
+    "/releases": {
+      "get": {
+        "tags": ["Releases"],
+        "summary": "Get TRI records",
+        "description": "List Toxic Release Inventory records",
+        "operationId": "getTRI",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/limit"},
+          {"$ref": "#/definitions/offset"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/getTRI"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/releases/{doc_control_num}": {
+      "get": {
+        "tags": ["Releases"],
+        "summary": "Show TRI a record",
+        "description": "Show details on a Toxic Release Inventory record",
+        "operationId": "showTRI",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/showTRI"}
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {"$ref": "#/definitions/Error"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/facilities": {
+      "get": {
+        "tags": ["Facilities"],
+        "summary": "Get Facilities",
+        "description": "Get a list of Facilities",
+        "operationId": "getFacilities",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/limit"},
+          {"$ref": "#/definitions/offset"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/getFacilities"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/facilities/{facility_id}": {
+      "get": {
+        "tags": ["Facilities"],
+        "summary": "Show a Facility",
+        "description": "Show details on a Facility",
+        "operationId": "showFacility",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/showFacility"}
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {"$ref": "#/definitions/Error"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/facilities/{facility_id}/releases": {
+      "get": {
+        "tags": ["Releases", "Facilities"],
+        "summary": "Get TRI records for a Facility",
+        "description": "List Toxic Release Inventory records for a Facility",
+        "operationId": "getTRIForFacility",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/limit"},
+          {"$ref": "#/definitions/offset"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/getTRI"}
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {"$ref": "#/definitions/Error"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/reports": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get aggregated TRI records",
+        "description": "List aggregated Toxic Release Inventory records",
+        "operationId": "getReports",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/groupBy"},
+          {"$ref": "#/definitions/operation"},
+          {"$ref": "#/definitions/agg_fields"},
+          {"$ref": "#/definitions/limit"},
+          {"$ref": "#/definitions/offset"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/getReports"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+
+  "definitions": {
+    "Success": {
+      "properties": {
+        "data": {
+          "oneOf": [
+            {"type": "object"},
+            {"type": "array", "items": {"type": "object"}}
+          ]
+        },
+        "meta": {"$ref": "#/definitions/meta"}
+      },
+      "require": ["data", "meta"]
+    },
+
+    "Error": {
+      "properties": {
+        "errors": {
+          "properties": {
+            "message": {"type": "string"},
+            "errors": {"type": "array"}
+          }
+        },
+        "meta": {"$ref": "#/definitions/meta"}
+      }
+    },
+
+    "Release": {
+      "properties": {
+        "documentControlNumber": {"type": "integer", "example": 1313213154925},
+        "formType": {"type": "string", "example": "R"},
+        "year": {"type": "integer", "example": 2009},
+        "facility": {"$ref": "#/definitions/Facility"},
+        "chemical": {
+          "properties": {
+            "name": {"type": "string", "example": "ZINC COMPOUNDS"},
+            "casNumber": {"type": "string", "example": "N982"},
+            "isCleanAirActChemical": {"type": "boolean"},
+            "classification": {"type": "string", "example": "TRI"},
+            "isMetal": {"type": "boolean"},
+            "metalCategory": {"type": "integer", "example": 1},
+            "isCarcinogen": {"type": "boolean"}
+          }
+        },
+        "unitOfMeasure": {"type": "string", "example": "Pounds"},
+        "quantitiesEnteringEnvironment": {
+          "properties": {
+            "fugitiveAir": {"type": "number", "example": 0},
+            "stackAir": {"type": "number", "example": 178.4},
+            "water": {"type": "number"},
+            "undergroundClass1": {"type": "number"},
+            "undergroundClass2-5": {"type": "number"},
+            "rcraCLandfills": {"type": "number"},
+            "otherLandfills": {"type": "number"},
+            "landTreatment": {"type": "number"},
+            "surfaceImpoundment": {"type": "number"},
+            "rcraCSurfaceImpoundment": {"type": "number"},
+            "otherSurfaceImpoundment": {"type": "number"},
+            "otherDisposal": {"type": "number"},
+            "totals": {
+              "properties": {
+                "totalAir": {"type": "number", "example": 178.4},
+                "onsiteReleaseTotal": {"type": "number", "example": 178.4}
+              }
+            }
+          }
+        },
+        "transfersToOffsiteLocations": {
+          "properties": {
+            "potwTransfersForRelease": {"type": "number"},
+            "potwTransfersForTreatment": {"type": "number"},
+            "offsiteStorage": {"type": "number"},
+            "offsiteSolidificationStabilizationMetals": {"type": "number"},
+            "offsiteWastewaterTreatmentExcludePotw": {"type": "number"},
+            "offsiteUndergroundInjection": {"type": "number"},
+            "offsiteUndergroundInjectionClass1Wells": {"type": "number"},
+            "offsiteUndergroundInjectionClass2Wells": {"type": "number"},
+            "offsiteLandfill": {"type": "number"},
+            "offsiteSurfaceImpoundment": {"type": "number"},
+            "offsiteSubtitleCSurfaceImpoundment": {"type": "number"},
+            "offsiteOtherSurfaceImpoundment": {"type": "number"},
+            "offsiteOtherLandfills": {"type": "number"},
+            "offsiteRcraSubtitleCLandfill": {"type": "number"},
+            "offsiteLandTreatment": {"type": "number"},
+            "offsiteOtherLandDisposal": {"type": "number"},
+            "offsiteOtherOffsiteManagement": {"type": "number"},
+            "offsiteTransferToWasteBrokerDisposal": {"type": "number"},
+            "offsiteUnknown": {"type": "number", "example": 6387},
+            "offsiteSolventsOrganicsRecovery": {"type": "number"},
+            "offsiteMetalsRecovery": {"type": "number"},
+            "offsiteOtherReuseRecovery": {"type": "number"},
+            "offsiteAcidRegeneration": {"type": "number"},
+            "offsiteTransferToWasteBrokerRecycling": {"type": "number"},
+            "offsiteEnergyRecovery": {"type": "number"},
+            "offsiteTransferToWasteBrokerEnergyRecovery": {"type": "number"},
+            "offsiteSolidicationStabilization": {"type": "number"},
+            "offsiteIncenerationThermalTreatment": {"type": "number"},
+            "offsiteIncenerationInsignificantFueldValue": {"type": "number"},
+            "offsiteWasteTreatmentExcludePotw": {"type": "number"},
+            "offsiteOtherWasteTreatment": {"type": "number"},
+            "totals": {
+              "properties": {
+                "potwTotalTransfers": {"type": "number"},
+                "offsiteReleaseTotal": {"type": "number"},
+                "offsiteRecycledTotal": {"type": "number"},
+                "offsiteRecoveryTotal": {"type": "number"},
+                "offsiteTransferToWasteBrokerExcludeWasteTreatment": {"type": "number"},
+                "offsiteTreatedTotal": {"type": "number", "example": 6387},
+                "totalReleases": {"type": "number", "example": 6464.4}
+              }
+            }
+          }
+        },
+        "disposalSourceReductionRecycling": {
+          "properties": {
+            "onsiteContainedReleases": {"type": "number"},
+            "onsiteOtherReleases": {"type": "number", "example": 178.4},
+            "offsiteContainedReleases": {"type": "number"},
+            "offsiteOtherReleases": {"type": "number", "example": 6387},
+            "onsiteEnergyRecovery": {"type": "number"},
+            "offsiteEnergyRecovery": {"type": "number"},
+            "onsiteRecycling": {"type": "number"},
+            "offsiteRecycling": {"type": "number"},
+            "onsiteTreatment": {"type": "number"},
+            "offsiteTreatment": {"type": "number"},
+            "oneTimeRelease": {"type": "number"},
+            "totals": {
+              "properties": {
+                "totalReleases": {"type": "number", "example": 6565.4},
+                "productionWaste": {"type": "number", "example": 6565.4}
+              }
+            }
+          }
+        },
+        "productionRatio": {"type": "number", "example": 1.31}
+      }
+    },
+
+    "showTRI": {
+      "allOf": [
+        {"$ref": "#/definitions/Success"},
+        {
+          "properties": {
+            "data": {"$ref": "#/definitions/Release"}
+          }
+        }
+      ]
+    },
+
+    "getTRI": {
+      "allOf": [
+        {"$ref": "#/definitions/Success"},
+        {
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/Release"}
+            }
+          }
+        }
+      ]
+    },
+
+    "NaicsCodes": {
+      "properties": {
+        "primary": {"type": "integer", "example": 33312},
+        "supplemental": {
+          "type": "array",
+          "items": {"type": "integer", "example": 33312}
+        }
+      }
+    },
+
+    "Facility": {
+      "properties": {
+        "id": {"type": "string", "example": "77041VRCSH12950"},
+        "name": {"type": "string", "example": "NOV RIG SOLUTIONS WEST LITTLE YORK"},
+        "parentCompany": {
+          "properties": {
+            "id": {"type": "string", "example": "77041VRCSH12950"},
+            "name": {"type": "string", "example": "NOV RIG SOLUTIONS WEST LITTLE YORK"}
+          }
+        },
+        "address": {
+          "properties": {
+            "streetAddress": {"type": "string", "example": "12950 W LITTLE YORK"},
+            "city": {"type": "string", "example": "HOUSTON"},
+            "county": {"type": "string", "example": "HARRIS"},
+            "state": {"type": "string", "example": "TX"},
+            "zipcode": {"type": "string", "example": "77041"}
+          }
+        },
+        "biaCode": {"type": "string", "example": ""},
+        "tribeName": {"type": "string", "example": ""},
+        "latitude": {"type": "string", "example": "29.86307"},
+        "longitude": {"type": "string", "example": "-95.60604"},
+        "sicCodes": {"$ref": "#/definitions/NaicsCodes"},
+        "naicsCodes": {"$ref": "#/definitions/NaicsCodes"}
+      }
+    },
+
+    "showFacility": {
+      "allOf": [
+        {"$ref": "#/definitions/Success"},
+        {
+          "properties": {
+            "data": {"$ref": "#/definitions/Facility"}
+          }
+        }
+      ]
+    },
+
+    "getFacilities": {
+      "allOf": [
+        {"$ref": "#/definitions/Success"},
+        {
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/Facility"}
+            }
+          }
+        }
+      ]
+    },
+
+    "Report": {
+      "properties": {
+        "year": {"type": "integer"},
+        "agg_field1": {"type": "integer"},
+        "agg_field2": {"type": "integer"}
+      }
+    },
+
+    "getReports": {
+      "allOf": [
+        {"$ref": "#/definitions/Success"},
+        {
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/Report"}
+            }
+          }
+        }
+      ]
+    },
+
+    "limit": {
+      "name": "limit",
+      "in": "query",
+      "description": "How many records to return",
+      "type": "integer"
+    },
+
+    "offset": {
+      "name": "offset",
+      "in": "query",
+      "description": "Number of records to skip",
+      "type": "integer"
+    },
+
+    "filters": {
+      "name": "filters",
+      "in": "query",
+      "description": "Filter the data using Lucene ex. filters=faciltiy.state:NC AND year:2009",
+      "type": "string"
+    },
+
+    "groupBy": {
+      "name": "groupBy",
+      "in": "query",
+      "description": "Field to group the report by",
+      "type": "string",
+      "enum": ["year", "state"]
+    },
+
+    "operation": {
+      "name": "operation",
+      "in": "query",
+      "description": "Type of operation to perform on fields",
+      "type": "string",
+      "enum": ["count", "sum"]
+    },
+
+    "agg_fields": {
+      "name": "agg_fields",
+      "in": "query",
+      "description": "Fields to perform the operation on during a groupBy",
+      "type": "string"
+    },
+
+    "meta": {
+      "type": "object",
+      "properties": {
+        "limit": {"type": "integer", "example": 25},
+        "offset": {"type": "integer", "example": 0},
+        "total": {"type": "integer", "example": 100}
+      }
+    }
+
+
+  }
+}
