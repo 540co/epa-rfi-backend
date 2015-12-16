@@ -8,8 +8,9 @@ function EpaServiceProvider(){
     var app = Container.app;
 
     var router = Container.express.Router();
+    var Responder = Container.Responder;
 
-    app.use(require('./routes.js')(router));
+    app.use(require('./routes.js')(router, Responder));
   }
 
 

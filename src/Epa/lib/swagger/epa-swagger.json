@@ -15,7 +15,7 @@
   "schema": [
     "http", "https"
   ],
-  
+
   "paths": {
     "/releases": {
       "get": {
@@ -35,6 +35,10 @@
           "200": {
             "description": "OK",
             "schema": {"$ref": "#/definitions/getTRI"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
           }
         },
         "security": []
@@ -51,12 +55,16 @@
           "application/json"
         ],
         "parameters": [
-          {"$ref": "#/definitions/filters"}
+          {"$ref": "#/definitions/doc_control_num"}
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {"$ref": "#/definitions/showTRI"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
           },
           "404": {
             "description": "Not Found",
@@ -85,6 +93,10 @@
           "200": {
             "description": "OK",
             "schema": {"$ref": "#/definitions/getFacilities"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
           }
         },
         "security": []
@@ -101,12 +113,16 @@
           "application/json"
         ],
         "parameters": [
-          {"$ref": "#/definitions/filters"}
+          {"$ref": "#/definitions/facility_id"}
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {"$ref": "#/definitions/showFacility"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
           },
           "404": {
             "description": "Not Found",
@@ -119,7 +135,7 @@
 
     "/facilities/{facility_id}/releases": {
       "get": {
-        "tags": ["Releases", "Facilities"],
+        "tags": ["Facilities"],
         "summary": "Get TRI records for a Facility",
         "description": "List Toxic Release Inventory records for a Facility",
         "operationId": "getTRIForFacility",
@@ -127,6 +143,7 @@
           "application/json"
         ],
         "parameters": [
+          {"$ref": "#/definitions/facility_id"},
           {"$ref": "#/definitions/filters"},
           {"$ref": "#/definitions/limit"},
           {"$ref": "#/definitions/offset"}
@@ -135,6 +152,10 @@
           "200": {
             "description": "OK",
             "schema": {"$ref": "#/definitions/getTRI"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
           },
           "404": {
             "description": "Not Found",
@@ -155,10 +176,10 @@
           "application/json"
         ],
         "parameters": [
-          {"$ref": "#/definitions/filters"},
           {"$ref": "#/definitions/groupBy"},
           {"$ref": "#/definitions/operation"},
           {"$ref": "#/definitions/agg_fields"},
+          {"$ref": "#/definitions/filters"},
           {"$ref": "#/definitions/limit"},
           {"$ref": "#/definitions/offset"}
         ],
@@ -199,7 +220,7 @@
             "errors": {"type": "array"}
           }
         },
-        "meta": {"$ref": "#/definitions/meta"}
+        "meta": {"type": "object"}
       }
     },
 
@@ -475,6 +496,22 @@
         "offset": {"type": "integer", "example": 0},
         "total": {"type": "integer", "example": 100}
       }
+    },
+
+    "facility_id": {
+      "name": "Facility ID",
+      "in": "path",
+      "description": "Facility to fetch",
+      "required": true,
+      "type": "string"
+    },
+
+    "doc_control_num": {
+      "name": "Document Control Number",
+      "in": "path",
+      "description": "Document to fetch",
+      "required": true,
+      "type": "integer"
     }
 
 
