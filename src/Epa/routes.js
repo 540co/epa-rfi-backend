@@ -40,13 +40,11 @@ module.exports = function(router, Responder, Repo){
 
 
   router.get('/tri/facilities/:facility_id/releases', function(req, res){
-    var filters = "";
+    var filters = "facility.id:" + req.params.facility_id;
 
     if(req.query.filters){
-      filters += req.query.filters;
+      filters += "AND " + req.query.filters;
     }
-
-    filters += " AND facility.id:" + req.params.facility_id;
 
     var options = {
       filters: filters,
@@ -115,7 +113,7 @@ module.exports = function(router, Responder, Repo){
     var filters = "chemical.isCleanAirActChemical:true";
 
     if(req.query.filters){
-      filters += req.query.filters;
+      filters += "AND " + req.query.filters;
     }
 
     var options = {
