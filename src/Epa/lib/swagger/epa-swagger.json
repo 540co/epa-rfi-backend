@@ -9,7 +9,7 @@
       "email": "aaron@540.co"
     }
   },
-  "host": "",
+  "host": "localhost:3000",
   "basePath": "/tri",
   "tags": ["Releases", "Facilities", "Reports"],
   "schema": [
@@ -179,9 +179,36 @@
           {"$ref": "#/definitions/groupBy"},
           {"$ref": "#/definitions/operation"},
           {"$ref": "#/definitions/agg_fields"},
-          {"$ref": "#/definitions/filters"},
-          {"$ref": "#/definitions/limit"},
-          {"$ref": "#/definitions/offset"}
+          {"$ref": "#/definitions/filters"}
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {"$ref": "#/definitions/getReports"}
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {"$ref": "#/definitions/Error"}
+          }
+        },
+        "security": []
+      }
+    },
+
+    "/reports/clean-air": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get aggregated TRI records filtered for Clean Air Chemicals",
+        "description": "List aggregated Toxic Release Inventory records filtered for Clean Air Chemicals",
+        "operationId": "getCleanAirReports",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {"$ref": "#/definitions/groupBy"},
+          {"$ref": "#/definitions/operation"},
+          {"$ref": "#/definitions/agg_fields"},
+          {"$ref": "#/definitions/filters"}
         ],
         "responses": {
           "200": {
@@ -258,7 +285,6 @@
             "otherDisposal": {"type": "number"},
             "totals": {
               "properties": {
-                "totalAir": {"type": "number", "example": 178.4},
                 "onsiteReleaseTotal": {"type": "number", "example": 178.4}
               }
             }
@@ -297,19 +323,19 @@
             "offsiteIncenerationInsignificantFueldValue": {"type": "number"},
             "offsiteWasteTreatmentExcludePotw": {"type": "number"},
             "offsiteOtherWasteTreatment": {"type": "number"},
+            "offsiteTransferToWasteBrokerExcludeWasteTreatment": {"type": "number"},
             "totals": {
               "properties": {
                 "potwTotalTransfers": {"type": "number"},
                 "offsiteReleaseTotal": {"type": "number"},
                 "offsiteRecycledTotal": {"type": "number"},
                 "offsiteRecoveryTotal": {"type": "number"},
-                "offsiteTransferToWasteBrokerExcludeWasteTreatment": {"type": "number"},
-                "offsiteTreatedTotal": {"type": "number", "example": 6387},
-                "totalReleases": {"type": "number", "example": 6464.4}
+                "offsiteTreatedTotal": {"type": "number", "example": 6387}
               }
             }
           }
         },
+        "onsiteAndOffsiteTotalReleases": {"type": "number"},
         "disposalSourceReductionRecycling": {
           "properties": {
             "onsiteContainedReleases": {"type": "number"},
@@ -471,7 +497,7 @@
       "in": "query",
       "description": "Field to group the report by",
       "type": "string",
-      "enum": ["year", "state"]
+      "enum": ["year", "facility.address.state"]
     },
 
     "operation": {

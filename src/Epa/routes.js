@@ -14,8 +14,8 @@ module.exports = function(router, Responder, Repo){
   router.get('/tri/facilities', function(req, res){
     var options = {
       filters: req.query.filters,
-      limit: req.query.limit,
-      offset: req.query.offset
+      limit: parseInt(req.query.limit) || 25,
+      offset: parseInt(req.query.offset) || 0
     };
 
     Repo.getFacilities(options, function(err, data){
@@ -50,8 +50,8 @@ module.exports = function(router, Responder, Repo){
 
     var options = {
       filters: filters,
-      limit: req.query.limit,
-      offset: req.query.offset
+      limit: parseInt(req.query.limit) || 25,
+      offset: parseInt(req.query.offset) || 0
     };
 
     Repo.getReleases(options, function(err, data){
@@ -67,8 +67,8 @@ module.exports = function(router, Responder, Repo){
   router.get('/tri/releases', function(req, res){
     var options = {
       filters: req.query.filters,
-      limit: req.query.limit,
-      offset: req.query.offset
+      limit: parseInt(req.query.limit) || 25,
+      offset: parseInt(req.query.offset) || 0
     };
 
     Repo.getReleases(options, function(err, data){
@@ -93,7 +93,47 @@ module.exports = function(router, Responder, Repo){
 
   // REPORTS
   router.get('/tri/reports', function(req, res){
+    var options = {
+      groupBy: req.query.groupBy,
+      operation: req.query.operation,
+      agg_fields: req.query.agg_fields,
+      filters: req.query.filters,
+      limit: parseInt(req.query.limit) || 25,
+      offset: parseInt(req.query.offset) || 0
+    }
 
+    Repo.getReport(options, function(err, data){
+      if(err){
+        Responder(res).respondNotFound();
+      }else{
+        Responder(res).setMeta(Repo.getMeta()).respondOk(data);
+      }
+    });
+  });
+
+  router.get('/tri/reports/clean-air', function(req, res){
+    var filters = "chemical.isCleanAirActChemical:true";
+
+    if(req.query.filters){
+      filters += req.query.filters;
+    }
+
+    var options = {
+      groupBy: req.query.groupBy,
+      operation: req.query.operation,
+      agg_fields: req.query.agg_fields,
+      filters: filters,
+      limit: parseInt(req.query.limit) || 25,
+      offset: parseInt(req.query.offset) || 0
+    }
+
+    Repo.getReport(options, function(err, data){
+      if(err){
+        Responder(res).respondNotFound();
+      }else{
+        Responder(res).setMeta(Repo.getMeta()).respondOk(data);
+      }
+    });
   });
 
 
