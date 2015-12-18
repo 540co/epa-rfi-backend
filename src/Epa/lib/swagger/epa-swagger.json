@@ -9,8 +9,8 @@
       "email": "aaron@540.co"
     }
   },
-  "host": "localhost:3000",
-  "basePath": "/tri",
+  "host": "",
+  "basePath": "/api",
   "tags": ["Releases", "Facilities", "Reports"],
   "schema": [
     "http", "https"

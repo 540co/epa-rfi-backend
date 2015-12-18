@@ -4,10 +4,9 @@ var year = process.argv[2];
 var fs = require('fs');
 
 function transformYear(year){
-  var input = __dirname + "/../lib/json/TRI_" + year + "_US.json";
+  var dirty = require(__dirname + "/../lib/json/TRI_" + year + "_US.json");
   var output = __dirname + "/../lib/json/CLEANED_TRI_" + year + "_US.json"
 
-  var dirty = require(__dirname + "/../lib/json/TRI_" + year + "_US.json");
   console.log(year + " loaded...");
 
   var clean = transformer.List( dirty );
