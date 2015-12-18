@@ -533,7 +533,7 @@
     },
 
     "doc_control_num": {
-      "name": "Document Control Number",
+      "name": "doc_control_num",
       "in": "path",
       "description": "Document to fetch",
       "required": true,

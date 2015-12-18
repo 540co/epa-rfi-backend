@@ -14,6 +14,9 @@ var pointer = 0;
 var length = json.length;
 console.log("length: ", length);
 
+// console.log(json[length - 2]);
+// return;
+
 
 function post(json, start, end, callback){
   // make body
