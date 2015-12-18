@@ -59,13 +59,15 @@
               "address": {
                 "properties": {
                   "city": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                   },
                   "county": {
                     "type": "string"
                   },
                   "state": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                   },
                   "streetAddress": {
                     "type": "string"
@@ -79,7 +81,8 @@
                 "type": "long"
               },
               "id": {
-                "type": "string"
+                "type": "string",
+                "index": "not_analyzed"
               },
               "latitude": {
                 "type": "double"
@@ -189,6 +192,9 @@
                 "type": "long"
               },
               "offsiteSolidicationStabilization": {
+                "type": "long"
+              },
+              "offsiteSolidificationStabilizationMetals": {
                 "type": "long"
               },
               "offsiteSolventsOrganicsRecovery": {

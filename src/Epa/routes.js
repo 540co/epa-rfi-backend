@@ -1,4 +1,4 @@
-module.exports = function(router, Responder, Repo){
+module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
   // SWAGGER
   router.get('/tri', function(req, res){
@@ -89,7 +89,22 @@ module.exports = function(router, Responder, Repo){
     });
   });
 
+
   // REPORTS
+  router.use('/tri/reports*', function(req, res, next){
+    var mandatory = ['groupBy', 'operation', 'agg_fields'];
+
+    for(var x in mandatory){
+      if(! req.query.hasOwnProperty(mandatory[x])){
+        Responder(res).respondBadRequest("Report requires the following query parameters: " + mandatory.join(", "));
+        break;
+      }
+    }
+
+    next();
+  });
+
+
   router.get('/tri/reports', function(req, res){
     var options = {
       groupBy: req.query.groupBy,
@@ -102,10 +117,12 @@ module.exports = function(router, Responder, Repo){
       if(err){
         Responder(res).respondNotFound();
       }else{
+        data = DotObjectTransformer.List(data);
         Responder(res).setMeta(Repo.getMeta()).respondOk(data);
       }
     });
   });
+
 
   router.get('/tri/reports/clean-air', function(req, res){
     var filters = "chemical.isCleanAirActChemical:true";
@@ -125,11 +142,12 @@ module.exports = function(router, Responder, Repo){
       if(err){
         Responder(res).respondNotFound();
       }else{
+        data = DotObjectTransformer.List(data);
         Responder(res).setMeta(Repo.getMeta()).respondOk(data);
       }
     });
-  });
 
+  });
 
   return router;
 }

@@ -4,6 +4,8 @@ function EpaServiceProvider(){
     _registerConverter(Container);
     _registerTransformer(Container);
     _registerRepository(Container);
+    _registerDotObjectTransformer(Container);
+
     _registerRoutes(Container);
   }
 
@@ -14,8 +16,9 @@ function EpaServiceProvider(){
     var router = Container.express.Router();
     var Responder = Container.Responder;
     var Repo = Container.EpaRepository;
+    var DotObjectTransformer = Container.DotObjectTransformer;
 
-    app.use(require('./routes.js')(router, Responder, Repo));
+    app.use(require('./routes.js')(router, Responder, Repo, DotObjectTransformer));
   }
 
 
@@ -41,6 +44,14 @@ function EpaServiceProvider(){
       var client = Container.client;
       var Transformer = Container.ElasticTransformer;
       return new EpaRepository(client, Transformer);
+    });
+  }
+
+
+  var _registerDotObjectTransformer = function(Container){
+    Container.bind('DotObjectTransformer', function(){
+      var Transformer = require('model-transformer');
+      return require('./DotObjectTransformer')(Transformer);
     });
   }
 
