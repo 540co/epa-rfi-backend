@@ -15,7 +15,9 @@ module.exports = function(Transformer){
       model.SIC_5,
       model.SIC_6
     ].filter(function(item){
-      return item != null && item != "NA";
+      return ! isNaN(item) && item != null;
+    }).map(function(item){
+      return parseInt(item);
     });
 
     var naics = [
@@ -25,7 +27,9 @@ module.exports = function(Transformer){
       model.NAICS_5,
       model.NAICS_6
     ].filter(function(item){
-      return item != null && item != "NA";
+      return ! isNaN(item) && item != null;
+    }).map(function(item){
+      return parseInt(item);
     });
 
     var parentCompany = function(){
@@ -59,11 +63,11 @@ module.exports = function(Transformer){
         "latitude": model.LATITUDE,
         "longitude": model.LONGITUDE,
         "sicCodes": {
-          "primary": model.PRIMARY_SIC,
+          "primary": isNaN(model.PRIMARY_SIC) ? null : parseInt(model.PRIMARY_SIC),
           "supplemental": sic
         },
         "naicsCodes": {
-          "primary": model.PRIMARY_NAICS,
+          "primary": isNaN(model.PRIMARY_NAICS) ? null : parseInt(model.PRIMARY_NAICS),
           "supplemental": naics
         }
       },

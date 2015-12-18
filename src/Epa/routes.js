@@ -95,9 +95,7 @@ module.exports = function(router, Responder, Repo){
       groupBy: req.query.groupBy,
       operation: req.query.operation,
       agg_fields: req.query.agg_fields,
-      filters: req.query.filters,
-      limit: parseInt(req.query.limit) || 25,
-      offset: parseInt(req.query.offset) || 0
+      filters: req.query.filters
     }
 
     Repo.getReport(options, function(err, data){
@@ -120,9 +118,7 @@ module.exports = function(router, Responder, Repo){
       groupBy: req.query.groupBy,
       operation: req.query.operation,
       agg_fields: req.query.agg_fields,
-      filters: filters,
-      limit: parseInt(req.query.limit) || 25,
-      offset: parseInt(req.query.offset) || 0
+      filters: filters
     }
 
     Repo.getReport(options, function(err, data){

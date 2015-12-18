@@ -1,0 +1,258 @@
+{
+  "epa-tri": {
+    "mappings": {
+      "records": {
+        "properties": {
+          "chemical": {
+            "properties": {
+              "casNumber": {
+                "type": "string"
+              },
+              "classification": {
+                "type": "string"
+              },
+              "isCarcinogen": {
+                "type": "boolean"
+              },
+              "isCleanAirActChemical": {
+                "type": "boolean"
+              },
+              "isMetal": {
+                "type": "boolean"
+              },
+              "metalCategory": {
+                "type": "long"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "disposalSourceReductionRecycling": {
+            "properties": {
+              "offsiteRecycling": {
+                "type": "long"
+              },
+              "offsiteTreatment": {
+                "type": "long"
+              },
+              "onsiteTreatment": {
+                "type": "long"
+              },
+              "totals": {
+                "properties": {
+                  "productionWaste": {
+                    "type": "long"
+                  },
+                  "totalReleases": {
+                    "type": "long"
+                  }
+                }
+              }
+            }
+          },
+          "documentControlNumber": {
+            "type": "long"
+          },
+          "facility": {
+            "properties": {
+              "address": {
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "county": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "streetAddress": {
+                    "type": "string"
+                  },
+                  "zipcode": {
+                    "type": "long"
+                  }
+                }
+              },
+              "biaCode": {
+                "type": "long"
+              },
+              "id": {
+                "type": "string"
+              },
+              "latitude": {
+                "type": "double"
+              },
+              "longitude": {
+                "type": "double"
+              },
+              "naicsCodes": {
+                "type": "object"
+              },
+              "name": {
+                "type": "string"
+              },
+              "parentCompany": {
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "sicCodes": {
+                "properties": {
+                  "primary": {
+                    "type": "long"
+                  },
+                  "supplemental": {
+                    "type": "long"
+                  }
+                }
+              },
+              "tribeName": {
+                "type": "string"
+              }
+            }
+          },
+          "formType": {
+            "type": "string"
+          },
+          "onsiteAndOffsiteTotalReleases": {
+            "type": "long"
+          },
+          "productionRatio": {
+            "type": "long"
+          },
+          "quantitiesEnteringEnvironment": {
+            "properties": {
+              "fugitiveAir": {
+                "type": "long"
+              },
+              "landTreatment": {
+                "type": "long"
+              },
+              "otherDisposal": {
+                "type": "long"
+              },
+              "stackAir": {
+                "type": "long"
+              },
+              "surfaceImpoundment": {
+                "type": "long"
+              },
+              "totals": {
+                "properties": {
+                  "onsiteReleaseTotal": {
+                    "type": "long"
+                  }
+                }
+              },
+              "water": {
+                "type": "long"
+              }
+            }
+          },
+          "transfersToOffsiteLocations": {
+            "properties": {
+              "offsiteEnergyRecovery": {
+                "type": "long"
+              },
+              "offsiteIncenerationInsignificantFueldValue": {
+                "type": "long"
+              },
+              "offsiteIncenerationThermalTreatment": {
+                "type": "long"
+              },
+              "offsiteLandTreatment": {
+                "type": "long"
+              },
+              "offsiteLandfill": {
+                "type": "long"
+              },
+              "offsiteMetalsRecovery": {
+                "type": "long"
+              },
+              "offsiteOtherLandDisposal": {
+                "type": "long"
+              },
+              "offsiteOtherOffsiteManagement": {
+                "type": "long"
+              },
+              "offsiteOtherReuseRecovery": {
+                "type": "long"
+              },
+              "offsiteOtherWasteTreatment": {
+                "type": "long"
+              },
+              "offsiteSolidicationStabilization": {
+                "type": "long"
+              },
+              "offsiteSolventsOrganicsRecovery": {
+                "type": "long"
+              },
+              "offsiteStorage": {
+                "type": "long"
+              },
+              "offsiteTransferToWasteBrokerDisposal": {
+                "type": "long"
+              },
+              "offsiteTransferToWasteBrokerEnergyRecovery": {
+                "type": "long"
+              },
+              "offsiteTransferToWasteBrokerRecycling": {
+                "type": "long"
+              },
+              "offsiteUndergroundInjection": {
+                "type": "long"
+              },
+              "offsiteUnknown": {
+                "type": "long"
+              },
+              "offsiteWasteTreatmentExcludePotw": {
+                "type": "long"
+              },
+              "offsiteWastewaterTreatmentExcludePotw": {
+                "type": "long"
+              },
+              "potwTransfersForRelease": {
+                "type": "long"
+              },
+              "potwTransfersForTreatment": {
+                "type": "long"
+              },
+              "totals": {
+                "properties": {
+                  "offsiteRecoveryTotal": {
+                    "type": "long"
+                  },
+                  "offsiteRecycledTotal": {
+                    "type": "long"
+                  },
+                  "offsiteReleaseTotal": {
+                    "type": "long"
+                  },
+                  "offsiteTreatedTotal": {
+                    "type": "long"
+                  },
+                  "potwTotalTransfers": {
+                    "type": "long"
+                  }
+                }
+              }
+            }
+          },
+          "unitOfMeasure": {
+            "type": "string"
+          },
+          "year": {
+            "type": "long"
+          }
+        }
+      }
+    }
+  }
+}

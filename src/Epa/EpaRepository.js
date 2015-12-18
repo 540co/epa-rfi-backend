@@ -97,23 +97,29 @@ function EpaRepository(client, Transformer){
   }
 
   var _createQuery = function(groupBy, oper, fields, filters){
+    var obj = {};
 
-    var aggs = {};
-    fields.forEach(function(field){
-      aggs[field] = {
-        sum: {field: field}
-      }
-    });
+    // If summing
+    if(oper == 'sum' || oper == 'avg'){
+      var aggs = {};
+      fields.forEach(function(field){
+        aggs[field] = {
+          sum: {field: field}
+        }
+      });
 
-    var obj = {
-      "aggregations": {
+      obj.aggregations = {
           "group": {
-              "terms": {"field": groupBy},
+              "terms": {
+                "field": groupBy,
+                "size": 0
+              },
               "aggs": aggs
           }
-      }
-    };
+      };
+    }
 
+    // filter aggregations
     if(filters){
       obj.query = {
          "filtered": {
@@ -161,6 +167,8 @@ function EpaRepository(client, Transformer){
     }, function(err, response){
       if(!err){
         var data = _transformBuckets(response.aggregations.group.buckets, options.groupBy, fields);
+        options.total = data.length;
+        self._setMeta(options);
       }
       callback(err, data);
     });

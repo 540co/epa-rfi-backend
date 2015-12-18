@@ -505,7 +505,7 @@
       "in": "query",
       "description": "Type of operation to perform on fields",
       "type": "string",
-      "enum": ["count", "sum"]
+      "enum": ["sum", "avg"]
     },
 
     "agg_fields": {
