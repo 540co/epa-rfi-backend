@@ -6,31 +6,35 @@ var bodyParser = require('body-parser');
 var swaggerUi = require('swaggerize-ui');
 var HttpError = require('./Errors/HttpError.js');
 
-//*
-app.use(function(req, res, next){
-  // validate json
-  next();
-});
-//*/
 
 app.use( bodyParser.json() );
 
 
 
 // Routes
-var router = express.Router();
+var router = Container.router;
 var schemaRepo = Container.make('SchemasRepository');
 var resourceRepo = Container.make('ResourcesRepository');
 var patchRepo = Container.make('PatchRepository');
 
+// Set maximum limit
+app.use(function(req, res, next){
+  // validate json
+  if(req.query.hasOwnProperty('limit')){
+    req.query.limit = Math.max(req.query.limit, 2);
+  }
+console.log("here");
+  next();
+});
 
+/*
 app.use(require('./Routes/Schemas.js')(router, Responder, schemaRepo));
 app.use(require('./Routes/Resources.js')(router, Responder, resourceRepo));
 app.use(require('./Routes/Events.js')(router, Responder, patchRepo));
 app.use(require('./Routes/Versions.js')(router, Responder, patchRepo));
 app.use(require('./Routes/Swagger.js')(router, swaggerUi));
+*/
 
-// app.use(require('./Epa/routes.js')(router, Responder, Container.EpaRepository));
 
 // 404 catch
 app.use(function(req, res, next){

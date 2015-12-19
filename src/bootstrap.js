@@ -20,6 +20,8 @@ Container.bindShared('app', function(container){
   return container.express();
 });
 
+Container.instance('router', Container.express.Router());
+
 Container.instance('EventBus', require('./Core/Events/EventBus.js'));
 
 Container.instance('Dispatcher', Container.EventBus);

@@ -1,5 +1,6 @@
 module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
+
   // SWAGGER
   router.get('/tri', function(req, res){
     res.redirect('/docs/?url=%2Ftri%2Fswagger.json');

@@ -13,12 +13,14 @@ function EpaServiceProvider(){
   var _registerRoutes = function(Container){
     var app = Container.app;
 
-    var router = Container.express.Router();
+    var router = Container.router;//Container.express.Router();
     var Responder = Container.Responder;
     var Repo = Container.EpaRepository;
     var DotObjectTransformer = Container.DotObjectTransformer;
 
-    app.use(require('./routes.js')(router, Responder, Repo, DotObjectTransformer));
+    // app.use(require('./routes.js')(router, Responder, Repo, DotObjectTransformer));
+    var routes = require('./routes.js');
+    routes(app, Responder, Repo, DotObjectTransformer);
   }
 
 
