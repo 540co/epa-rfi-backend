@@ -1,39 +1,25 @@
 var Container = require('./bootstrap.js');
 var app = Container.app;
-var express = Container.express;
 var Responder = Container.Responder;
 var bodyParser = require('body-parser');
-var swaggerUi = require('swaggerize-ui');
-var HttpError = require('./Errors/HttpError.js');
 
 
 app.use( bodyParser.json() );
 
 
-
-// Routes
-var router = Container.router;
-var schemaRepo = Container.make('SchemasRepository');
-var resourceRepo = Container.make('ResourcesRepository');
-var patchRepo = Container.make('PatchRepository');
-
-// Set maximum limit
-app.use(function(req, res, next){
-  // validate json
-  if(req.query.hasOwnProperty('limit')){
-    req.query.limit = Math.max(req.query.limit, 2);
-  }
-console.log("here");
-  next();
+// Before Middleware
+[
+  './Middleware/LimitMaximum.js'
+].forEach(function(path){
+  app.use( require(path) );
 });
 
-/*
-app.use(require('./Routes/Schemas.js')(router, Responder, schemaRepo));
-app.use(require('./Routes/Resources.js')(router, Responder, resourceRepo));
-app.use(require('./Routes/Events.js')(router, Responder, patchRepo));
-app.use(require('./Routes/Versions.js')(router, Responder, patchRepo));
-app.use(require('./Routes/Swagger.js')(router, swaggerUi));
-*/
+
+// Load Service Providers
+Container.config.service_providers.forEach(function(path){
+  var provider = require(path);
+  (new provider).register( Container );
+});
 
 
 // 404 catch
@@ -65,7 +51,6 @@ app.use(function(err, req, res, next){
   }
 
 });
-
 
 
 app.listen(3000);

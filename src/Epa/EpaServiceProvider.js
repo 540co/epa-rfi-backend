@@ -1,6 +1,7 @@
 function EpaServiceProvider(){
 
   var _register = function(Container){
+    _registerElasticClient(Container);
     _registerConverter(Container);
     _registerTransformer(Container);
     _registerRepository(Container);
@@ -10,17 +11,12 @@ function EpaServiceProvider(){
   }
 
 
-  var _registerRoutes = function(Container){
-    var app = Container.app;
-
-    var router = Container.router;//Container.express.Router();
-    var Responder = Container.Responder;
-    var Repo = Container.EpaRepository;
-    var DotObjectTransformer = Container.DotObjectTransformer;
-
-    // app.use(require('./routes.js')(router, Responder, Repo, DotObjectTransformer));
-    var routes = require('./routes.js');
-    routes(app, Responder, Repo, DotObjectTransformer);
+  var _registerElasticClient = function(Container){
+    Container.bindShared('client', function(container){
+      var elasticsearch = require('elasticsearch');
+      var config = container.resolve('config');
+      return new elasticsearch.Client(config.db.elastic);
+    });
   }
 
 
@@ -57,6 +53,21 @@ function EpaServiceProvider(){
     });
   }
 
+
+
+  var _registerRoutes = function(Container){
+    var app = Container.app;
+    var router = Container.router;//Container.express.Router();
+
+    var Responder = Container.Responder;
+    var Repo = Container.EpaRepository;
+    var DotObjectTransformer = Container.DotObjectTransformer;
+
+    // app.use(require('./routes.js')(router, Responder, Repo, DotObjectTransformer));
+    var routes = require('./routes.js');
+    routes(app, Responder, Repo, DotObjectTransformer);
+  }
+  
 
   return {
     register: _register

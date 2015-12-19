@@ -1,4 +1,4 @@
-var Repository = require(__dirname + "/../Repositories/Repository");
+var Repository = require(__dirname + "/../Core/Repositories/Repository");
 
 function EpaRepository(client, Transformer){
 
