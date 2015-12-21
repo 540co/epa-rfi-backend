@@ -28,6 +28,7 @@
         ],
         "parameters": [
           {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/fields"},
           {"$ref": "#/definitions/limit"},
           {"$ref": "#/definitions/offset"}
         ],
@@ -55,7 +56,8 @@
           "application/json"
         ],
         "parameters": [
-          {"$ref": "#/definitions/doc_control_num"}
+          {"$ref": "#/definitions/doc_control_num"},
+          {"$ref": "#/definitions/fields"}
         ],
         "responses": {
           "200": {
@@ -86,6 +88,7 @@
         ],
         "parameters": [
           {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/fields"},
           {"$ref": "#/definitions/limit"},
           {"$ref": "#/definitions/offset"}
         ],
@@ -113,7 +116,8 @@
           "application/json"
         ],
         "parameters": [
-          {"$ref": "#/definitions/facility_id"}
+          {"$ref": "#/definitions/facility_id"},
+          {"$ref": "#/definitions/fields"}
         ],
         "responses": {
           "200": {
@@ -145,6 +149,7 @@
         "parameters": [
           {"$ref": "#/definitions/facility_id"},
           {"$ref": "#/definitions/filters"},
+          {"$ref": "#/definitions/fields"},
           {"$ref": "#/definitions/limit"},
           {"$ref": "#/definitions/offset"}
         ],
@@ -489,6 +494,13 @@
       "name": "filters",
       "in": "query",
       "description": "Filter the data using Lucene ex. filters=faciltiy.state:NC AND year:2009",
+      "type": "string"
+    },
+
+    "fields": {
+      "name": "fields",
+      "in": "query",
+      "description": "Fields to limit on the response object ex. fields=facility.name,facility.address",
       "type": "string"
     },
 
