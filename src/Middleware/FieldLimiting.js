@@ -1,4 +1,5 @@
 var interceptor = require('express-interceptor');
+var dot = require('dot-object');
 
 var FieldLimitingInterceptor = interceptor(function(req, res){
   return {
@@ -15,6 +16,12 @@ var FieldLimitingInterceptor = interceptor(function(req, res){
         return false;
       }
 
+      // Must be successful response
+      if(res.statusCode > 299)
+      {
+        return false;
+      }
+
       return true;
     },
 
@@ -27,7 +34,6 @@ var FieldLimitingInterceptor = interceptor(function(req, res){
       }
 
       var newBody = {};
-      newBody.meta = json.meta;
 
       var fields = req.query.fields.split(',');
 
@@ -38,10 +44,10 @@ var FieldLimitingInterceptor = interceptor(function(req, res){
         var newObj = {};
 
         fields.forEach(function(field){
-          newObj[field] = obj[field];
+          newObj[field] = dot.pick(field, obj, false);
         });
 
-        return newObj;
+        return dot.object(newObj);
       }
 
       if(isArray){
@@ -51,6 +57,13 @@ var FieldLimitingInterceptor = interceptor(function(req, res){
           newBody.data.push( transform(obj, fields) );
         });
       }
+      else{
+        newBody.data = transform(json.data, fields);
+      }
+
+      // Add back meta
+      newBody.meta = json.meta;
+      newBody.meta.fields = fields;
 
       var string = JSON.stringify( newBody );
 

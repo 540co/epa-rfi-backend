@@ -10,25 +10,20 @@ app.use( bodyParser.json() );
 
 // Before Middleware
 [
-  './Middleware/LimitMaximum.js',
-  './Middleware/FieldLimiting.js'
+  __dirname + '/Middleware/LimitMaximum.js',
+  __dirname + '/Middleware/FieldLimiting.js',
+  __dirname + '/Middleware/Cors.js'
 ].forEach(function(path){
   app.use( require(path) );
 });
 
 
 // Load Service Providers
-Container.config.service_providers.forEach(function(path){
+[
+  __dirname + '/Epa/EpaServiceProvider.js'
+].forEach(function(path){
   var provider = require(path);
   (new provider).register( Container );
-});
-
-
-// After Middleware
-[
-  // './Middleware/FieldLimiting.js'
-].forEach(function(path){
-  app.use( require(path) );
 });
 
 
