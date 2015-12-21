@@ -9,7 +9,8 @@ app.use( bodyParser.json() );
 
 // Before Middleware
 [
-  './Middleware/LimitMaximum.js'
+  './Middleware/LimitMaximum.js',
+  './Middleware/Cors.js'
 ].forEach(function(path){
   app.use( require(path) );
 });

@@ -103,4 +103,16 @@ describe("ReleasesSpec", function(){
       });
   });
 
+
+  it("has enabled cors", function(done){
+    request(app)
+      .get('/tri/releases')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end(function(err, res){
+        expect(res.headers['access-control-allow-origin']).toEqual('*');
+        done();
+      });
+  });
+
 });
