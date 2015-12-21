@@ -2,10 +2,6 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   // SWAGGER
-  router.get('/tri', function(req, res){
-    res.redirect('/docs/?url=%2Ftri%2Fswagger.json');
-  });
-
   router.get('/tri/swagger.json', function(req, res){
     var swagger = require('./lib/swagger/epa-swagger.json');
     res.json(swagger);
@@ -62,8 +58,9 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
     });
   });
 
+
   // RELEASES
-  router.get('/tri/releases', function(req, res){
+  router.get('/tri/releases', function(req, res, next){
     var options = {
       filters: req.query.filters,
       limit: parseInt(req.query.limit) || 25,

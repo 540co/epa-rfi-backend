@@ -2,6 +2,7 @@ var Container = require('./bootstrap.js');
 var app = Container.app;
 var Responder = Container.Responder;
 var bodyParser = require('body-parser');
+var HttpError = require('./Errors/HttpError.js');
 
 
 app.use( bodyParser.json() );
@@ -9,7 +10,8 @@ app.use( bodyParser.json() );
 
 // Before Middleware
 [
-  './Middleware/LimitMaximum.js'
+  './Middleware/LimitMaximum.js',
+  './Middleware/FieldLimiting.js'
 ].forEach(function(path){
   app.use( require(path) );
 });
@@ -19,6 +21,14 @@ app.use( bodyParser.json() );
 Container.config.service_providers.forEach(function(path){
   var provider = require(path);
   (new provider).register( Container );
+});
+
+
+// After Middleware
+[
+  // './Middleware/FieldLimiting.js'
+].forEach(function(path){
+  app.use( require(path) );
 });
 
 
