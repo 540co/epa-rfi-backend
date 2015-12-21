@@ -1,6 +1,6 @@
-var Container = require('../../bootstrap.js');
+var Container = require('../../app.js');
 var client = Container.client;
-var fs = require('fs');
+var request = require('request');
 
 var year = process.argv[2];
 var _index = 'epa-tri';
@@ -9,11 +9,49 @@ var source = __dirname + "/../lib/json/CLEANED_TRI_" + year + "_US.json";
 var output = __dirname + "/../lib/json/doc_ids/" + year + ".json";
 var bulk_size = 1000;
 
+/*
 var json = require(source);
 
 // Reduce
 var ids = json.map(function(release){
   return release.documentControlNumber;
 });
+*/
+// console.log(ids.length);
 
-console.log(ids);
+request("https://airhound-dev.540.co/api/releases?filters=year%3A1994&fields=documentControlNumber&limit=100", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body) // Show the HTML for the Google homepage.
+  }
+})
+
+function appendId(id){
+
+}
+
+
+/*
+client.search({
+  index: _index,
+  type: _type,
+  size: 0,
+  body: {
+    "query" : {
+        "filtered" : {
+            "filter" : {
+                "terms" : {
+                    "documentControlNumber" : ids
+                }
+            }
+        }
+    }
+}
+}, function(err, response){
+  var total = response.hits.total;
+  console.log("length: ", ids.length);
+  console.log("total: ", total);
+  return null;
+});
+
+return null;
+*/

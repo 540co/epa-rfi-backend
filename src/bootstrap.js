@@ -14,11 +14,9 @@ Container.bind('express', function(){
   return require('express');
 });
 
-// Container.bindShared('app', function(container){
-//   return container.express();
-// });
-var app = Container.express();
-Container.instance('app', app);
+Container.bindShared('app', function(Container){
+  return Container.express();
+});
 
 Container.instance('router', Container.express.Router());
 
