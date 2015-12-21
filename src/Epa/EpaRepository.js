@@ -158,7 +158,7 @@ function EpaRepository(client, Transformer){
     var fields = options.agg_fields.split(",");
     var body = _createQuery(options.groupBy, options.operation, fields, options.filters);
 
-    body.aggregations.group.terms.size = options.limit;
+    body.aggregations.group.terms.size = 0;//options.limit;
     // body.aggregations.group.terms.from = options.offset;   WHY U NO WORK?
 
     this._client.search({
