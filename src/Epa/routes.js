@@ -1,4 +1,4 @@
-module.exports = function(router, Responder, Repo, DotObjectTransformer){
+module.exports = function(app, Responder, Repo, DotObjectTransformer){
 
   function getFields(req){
     return req.query.fields ? req.query.fields.split(',') : [];
@@ -6,13 +6,13 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   // SWAGGER
-  router.get('/tri/swagger.json', function(req, res){
+  app.get('/tri/swagger.json', function(req, res){
     var swagger = require('./lib/swagger/epa-swagger.json');
     res.json(swagger);
   });
 
   // FACILITIES
-  router.get('/tri/facilities', function(req, res){
+  app.get('/tri/facilities', function(req, res){
     var options = {
       filters: req.query.filters,
       limit: parseInt(req.query.limit) || 25,
@@ -30,7 +30,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
   });
 
 
-  router.get('/tri/facilities/:facility_id', function(req, res){
+  app.get('/tri/facilities/:facility_id', function(req, res){
     var options = {
       fields: getFields(req)
     };
@@ -45,7 +45,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
   });
 
 
-  router.get('/tri/facilities/:facility_id/releases', function(req, res){
+  app.get('/tri/facilities/:facility_id/releases', function(req, res){
     var filters = "facility.id:" + req.params.facility_id;
 
     if(req.query.filters){
@@ -70,7 +70,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   // RELEASES
-  router.get('/tri/releases', function(req, res, next){
+  app.get('/tri/releases', function(req, res, next){
     var options = {
       filters: req.query.filters,
       limit: parseInt(req.query.limit) || 25,
@@ -88,7 +88,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
   });
 
 
-  router.get('/tri/releases/:doc_control_num', function(req, res){
+  app.get('/tri/releases/:doc_control_num', function(req, res){
     var options = {
       fields: getFields(req)
     };
@@ -104,7 +104,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   // REPORTS
-  router.use('/tri/reports*', function(req, res, next){
+  app.use('/tri/reports*', function(req, res, next){
     var mandatory = ['groupBy', 'operation', 'agg_fields'];
 
     for(var x in mandatory){
@@ -118,7 +118,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
   });
 
 
-  router.get('/tri/reports', function(req, res){
+  app.get('/tri/reports', function(req, res){
     var options = {
       groupBy: req.query.groupBy,
       operation: req.query.operation,
@@ -139,7 +139,7 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
   });
 
 
-  router.get('/tri/reports/clean-air', function(req, res){
+  app.get('/tri/reports/clean-air', function(req, res){
     var filters = "chemical.isCleanAirActChemical:true";
 
     if(req.query.filters){
@@ -166,5 +166,43 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
   });
 
-  return router;
+
+  // Debug helpers
+  app.get('/tri/doc_ids/:year', function(req, res){
+    var client = Repo._client;
+
+    var query = "year:" + req.params.year;
+
+    var size = 200000;
+
+    client.search({
+      index: 'epa-tri',
+      type: 'records',
+      _source: ['documentControlNumber'],
+      body: {
+        size: size,
+        query: {
+          match: {year: req.params.year}
+        }
+      }
+    }, function(err, response){
+      if(!err){
+        if(response.hits.total > size){
+          Responder(res).respondBadRequest("Dataset is larger than: " + size);
+        }else{
+          var data = response.hits.hits.map(function(hit){
+            return hit._source.documentControlNumber;
+          });
+          Responder(res).respondOk(data);
+        }
+      }
+      else{
+        Responder(res).respondBadRequest(null, err);
+      }
+    });
+  });
+
+
+
+  return app;
 }

@@ -26,7 +26,7 @@ request("https://airhound-dev.540.co/api/releases?filters=year%3A1994&fields=doc
 })
 
 function appendId(id){
-
+  // fs.appendFileSync(output, id)
 }
 
 
