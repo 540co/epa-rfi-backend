@@ -170,7 +170,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
   // Debug helpers
   app.get('/tri/doc_ids/:year', function(req, res){
     var client = Repo._client;
-    var limit = req.query.limit;
+    var limit = req.query.idlimit;
     var offset = req.query.offset;
 
     client.search({

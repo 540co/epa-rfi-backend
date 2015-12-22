@@ -1,6 +1,7 @@
 var Container = require('../../app.js');
 var client = Container.client;
 var request = require('request');
+var async = require('async');
 
 var year = process.argv[2];
 var _index = 'epa-tri';
@@ -19,39 +20,51 @@ var ids = json.map(function(release){
 */
 // console.log(ids.length);
 
-request("https://airhound-dev.540.co/api/doc_ids/" + year, function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-    console.log(body) // Show the HTML for the Google homepage.
+var limit = 10000;
+var offset = 0;
+var total = {
+  ids: [],
+  add: function(array){
+    this.ids = this.ids.concat(array);
   }
-})
-
-function appendId(id){
-  // fs.appendFileSync(output, id)
-}
+};
 
 
-/*
-client.search({
-  index: _index,
-  type: _type,
-  size: 0,
-  body: {
-    "query" : {
-        "filtered" : {
-            "filter" : {
-                "terms" : {
-                    "documentControlNumber" : ids
-                }
-            }
-        }
+function getIds(year, limit, offset, callback){
+  var query = "limit=" + limit + "&offset=" + offset;
+  request("https://airhound-dev.540.co/api/doc_ids/" + year + "?" + query, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var data = JSON.parse(body).data;
+      callback(data);
+      return;
+    }else{
+      throw error;
     }
+  });
 }
-}, function(err, response){
-  var total = response.hits.total;
-  console.log("length: ", ids.length);
-  console.log("total: ", total);
-  return null;
-});
 
-return null;
-*/
+
+// getIds(1987, 3, 0, function (data){
+//     console.log(data);
+// });
+
+//*/
+async.parallel([
+  function(callback){
+    getIds(1987, 3, 0, function (data){
+        total.add(data);
+        callback();
+    });
+  },
+  function(callback){
+    getIds(1987, 3, 3, function (data){
+        total.add(data);
+        callback();
+    });
+  }
+], function(err){
+    if(err) throw err;
+    console.log(total.ids);
+    return;
+});
+//*/

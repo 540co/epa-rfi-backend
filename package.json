@@ -18,6 +18,7 @@
     "model-transformer": "0.0.2"
   },
   "devDependencies": {
+    "async": "^1.5.0",
     "csvtojson": "^0.5.0",
     "jasmine": "^2.3.2",
     "jsonschema-validator": "^0.4.1",
