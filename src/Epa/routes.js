@@ -170,9 +170,6 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
   // Debug helpers
   app.get('/tri/doc_ids/:year', function(req, res){
     var client = Repo._client;
-
-    var query = "year:" + req.params.year;
-
     var size = 10000;
 
     client.search({
@@ -187,14 +184,10 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
       }
     }, function(err, response){
       if(!err){
-        if(response.hits.total > size){
-          Responder(res).respondBadRequest("Dataset is larger than: " + size);
-        }else{
-          var data = response.hits.hits.map(function(hit){
-            return hit._source.documentControlNumber;
-          });
-          Responder(res).respondOk(data);
-        }
+        var data = response.hits.hits.map(function(hit){
+          return hit._source.documentControlNumber;
+        });
+        Responder(res).respondOk(data);
       }
       else{
         Responder(res).respondBadRequest(null, err);
