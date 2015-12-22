@@ -1,5 +1,9 @@
 module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
+  function getFields(req){
+    return req.query.fields ? req.query.fields.split(',') : [];
+  }
+
 
   // SWAGGER
   router.get('/tri/swagger.json', function(req, res){
@@ -12,7 +16,8 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
     var options = {
       filters: req.query.filters,
       limit: parseInt(req.query.limit) || 25,
-      offset: parseInt(req.query.offset) || 0
+      offset: parseInt(req.query.offset) || 0,
+      fields: getFields(req)
     };
 
     Repo.getFacilities(options, function(err, data){
@@ -26,7 +31,11 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   router.get('/tri/facilities/:facility_id', function(req, res){
-    Repo.findFacilityById(req.params.facility_id, function(err, data){
+    var options = {
+      fields: getFields(req)
+    };
+
+    Repo.findFacilityById(req.params.facility_id, options, function(err, data){
       if(err){
         Responder(res).respondNotFound();
       }else{
@@ -46,7 +55,8 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
     var options = {
       filters: filters,
       limit: parseInt(req.query.limit) || 25,
-      offset: parseInt(req.query.offset) || 0
+      offset: parseInt(req.query.offset) || 0,
+      fields: getFields(req)
     };
 
     Repo.getReleases(options, function(err, data){
@@ -64,7 +74,8 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
     var options = {
       filters: req.query.filters,
       limit: parseInt(req.query.limit) || 25,
-      offset: parseInt(req.query.offset) || 0
+      offset: parseInt(req.query.offset) || 0,
+      fields: getFields(req)
     };
 
     Repo.getReleases(options, function(err, data){
@@ -78,7 +89,11 @@ module.exports = function(router, Responder, Repo, DotObjectTransformer){
 
 
   router.get('/tri/releases/:doc_control_num', function(req, res){
-    Repo.getReleaseDocumentById(req.params.doc_control_num, function(err, data){
+    var options = {
+      fields: getFields(req)
+    };
+
+    Repo.getReleaseDocumentById(req.params.doc_control_num, options, function(err, data){
       if(err){
         Responder(res).respondNotFound();
       }else{
