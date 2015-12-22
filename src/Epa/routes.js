@@ -173,7 +173,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
 
     var query = "year:" + req.params.year;
 
-    var size = 200000;
+    var size = 10000;
 
     client.search({
       index: 'epa-tri',

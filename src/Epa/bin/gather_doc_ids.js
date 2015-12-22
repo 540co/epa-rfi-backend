@@ -19,7 +19,7 @@ var ids = json.map(function(release){
 */
 // console.log(ids.length);
 
-request("https://airhound-dev.540.co/api/releases?filters=year%3A1994&fields=documentControlNumber&limit=100", function (error, response, body) {
+request("https://airhound-dev.540.co/api/doc_ids/" + year, function (error, response, body) {
   if (!error && response.statusCode == 200) {
     console.log(body) // Show the HTML for the Google homepage.
   }
