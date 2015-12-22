@@ -170,14 +170,16 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
   // Debug helpers
   app.get('/tri/doc_ids/:year', function(req, res){
     var client = Repo._client;
-    var size = 10000;
+    var limit = req.query.limit;
+    var offset = req.query.offset;
 
     client.search({
       index: 'epa-tri',
       type: 'records',
       _source: ['documentControlNumber'],
       body: {
-        size: size,
+        size: limit,
+        from: offset,
         query: {
           match: {year: req.params.year}
         }
