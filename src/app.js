@@ -11,7 +11,6 @@ app.use( bodyParser.json() );
 // Before Middleware
 [
   __dirname + '/Middleware/LimitMaximum.js',
-  __dirname + '/Middleware/FieldLimiting.js',
   __dirname + '/Middleware/Cors.js'
 ].forEach(function(path){
   app.use( require(path) );

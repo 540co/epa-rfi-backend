@@ -18,7 +18,7 @@ describe("Middleware/FieldLimitingSpec", function(){
   });
 
 
-  it("GET /tri/releases?fields=facility (field limiting)", function(done){
+  it("GET /tri/releases/{doc_control_num}?fields=facility (field limiting)", function(done){
     request(app)
       .get('/tri/releases')
       .set('Accept', 'application/json')

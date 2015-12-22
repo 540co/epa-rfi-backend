@@ -24,16 +24,28 @@ function EpaRepository(client, Transformer){
 
 
   this.getFacilities = function(options, callback){
+    var fields = [];
+
+    if(options.fields){
+        options.fields.forEach(function(field){
+          fields.push('facility.' + field);
+        });
+    }else{
+      fields.push('facility');
+    }
+
     this._client.search({
       index: _index,
       type: _type,
       q: options.filters,
       size: options.limit,
-      from: options.offset
+      from: options.offset,
+      _source: fields
     }, function(err, response){
       if(!err){
         options.total = response.hits.total;
         self._setMeta(options);
+        var data = response.hits.hits;
         var data = response.hits.hits.map(function(hit){
           return hit._source.facility;
         });
@@ -43,9 +55,10 @@ function EpaRepository(client, Transformer){
   }
 
 
-  this.findFacilityById = function(facility_id, callback){
+  this.findFacilityById = function(facility_id, options, callback){
     this.getFacilities({
-      filters: 'facility.id:' + facility_id
+      filters: 'facility.id:' + facility_id,
+      fields: options.fields
     }, function(err, data){
       if(! err){
         if(data.length == 0){
@@ -66,7 +79,8 @@ function EpaRepository(client, Transformer){
       type: _type,
       q: options.filters,
       size: options.limit,
-      from: options.offset
+      from: options.offset,
+      _source: options.fields
     }, function(err, response){
       if(! err){
         options.total = response.hits.total;
@@ -80,9 +94,10 @@ function EpaRepository(client, Transformer){
   }
 
 
-  this.getReleaseDocumentById = function(document_id, callback){
+  this.getReleaseDocumentById = function(document_id, options, callback){
     this.getReleases({
-      filters: 'documentControlNumber:' + document_id
+      filters: 'documentControlNumber:' + document_id,
+      fields: options.fields
     }, function(err, data){
       if(! err){
         if(data.length == 0){
