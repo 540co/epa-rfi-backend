@@ -80,7 +80,10 @@ function EpaRepository(client, Transformer){
       q: options.filters,
       size: options.limit,
       from: options.offset,
-      _source: options.fields
+      _source: options.fields,
+      body: {
+        "sort": { "year": { "order": "asc" }}
+      }
     }, function(err, response){
       if(! err){
         options.total = response.hits.total;
