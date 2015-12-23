@@ -49,7 +49,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
     var filters = "facility.id:" + req.params.facility_id;
 
     if(req.query.filters){
-      filters += "AND " + req.query.filters;
+      filters += " AND " + req.query.filters;
     }
 
     var options = {
@@ -143,7 +143,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
     var filters = "chemical.isCleanAirActChemical:true";
 
     if(req.query.filters){
-      filters += "AND " + req.query.filters;
+      filters += " AND " + req.query.filters;
     }
 
     var options = {
@@ -207,6 +207,37 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
         return;
       }
       res.json(err);
+    });
+  });
+
+
+  app.get('/tri/scroll_ids/:year', function(req, res){
+    var client = Repo._client;
+
+    // first we do a search, and specify a scroll timeout
+    client.search({
+      index: 'epa-tri',
+      type: 'records',
+      // Set to 30 seconds because we are calling right back
+      scroll: '30s',
+      search_type: 'scan',
+      fields: ['title'],
+      q: 'title:test'
+    }, function getMoreUntilDone(error, response) {
+      // collect the title from each response
+      response.hits.hits.forEach(function (hit) {
+        allTitles.push(hit.fields.title);
+      });
+
+      if (response.hits.total !== allTitles.length) {
+        // now we can call scroll over and over
+        client.scroll({
+          scrollId: response._scroll_id,
+          scroll: '30s'
+        }, getMoreUntilDone);
+      } else {
+        console.log('every "test" title', allTitles);
+      }
     });
   });
 
