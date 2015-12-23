@@ -198,6 +198,18 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
   });
 
 
+  app.post('/tri/es_search', function(req, res){
+    var client = Repo._client;
+
+    client.search(req.body, function(err, response){
+      if(!err){
+        res.json(response);
+        return;
+      }
+      res.json(err);
+    });
+  });
+
 
   return app;
 }
