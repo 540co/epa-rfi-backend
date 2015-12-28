@@ -54,6 +54,9 @@ describe("FacilitiesSpec", function(){
           .end(function(err, res){
             var releases = res.body.data;
             expect(releases[0].facility.id).toEqual(facility.id);
+            releases.forEach(function(release){
+              expect( release.hasOwnProperty('documentControlNumber') ).toEqual(true);
+            });
             done();
           });
       });

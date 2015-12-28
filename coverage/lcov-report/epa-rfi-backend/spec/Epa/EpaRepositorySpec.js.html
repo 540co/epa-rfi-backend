@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for epa-rfi-backend/src/bootstrap.js</title>
+    <title>Code coverage report for epa-rfi-backend/spec/Epa/EpaRepositorySpec.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -16,13 +16,13 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">all files</a> / <a href="index.html">epa-rfi-backend/src/</a> bootstrap.js
+      <a href="../../../index.html">all files</a> / <a href="index.html">epa-rfi-backend/spec/Epa/</a> EpaRepositorySpec.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">93.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>14/15</span>
+        <span class='fraction'>18/18</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/4</span>
+        <span class='fraction'>7/7</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">93.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/15</span>
+        <span class='fraction'>18/18</span>
       </div>
     </div>
   </div>
@@ -76,72 +76,81 @@
 31
 32
 33
-34</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+34
+35
+36
+37</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var Container = require('./Core/Container/Container.js');
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var Container = require("../../src/app.js");
+var repo = Container.EpaRepository;
 &nbsp;
-Container.instance('config', require('../config'));
+describe("EpaRepository", function(){
 &nbsp;
-Container.instance('Responder', require('express-response-facade'));
+  it("getFacilities", function(done){
+    repo.getFacilities({filters:"facility.address.state:NC"}, function(err, data){
+      expect(data.length &gt; 0).toEqual(true);
+      data.forEach(function(facility){
+        expect(facility.address.state).toEqual("NC");
+      });
+      done();
+    });
+  });
 &nbsp;
-Container.bind('Subscriber', function(){
-  return require('./Core/Events/Subscriber.js');
+&nbsp;
+  it("getFacilities without duplicates", function(done){
+    repo.getFacilities({
+      filters:"facility.address.state:NC",
+      limit: 100
+    }, function(err, data){
+      expect(data.length &gt; 0).toEqual(true);
+      var ids = data.map(function(facility){
+        return facility.id;
+      });
+&nbsp;
+      ids = ids.sort();
+&nbsp;
+      for(var i = 1; i &lt; ids.length; i++){
+        expect(ids[i] == ids[i-1]).toEqual(false);
+      }
+      done();
+    });
+  });
+&nbsp;
 });
-&nbsp;
-&nbsp;
-// Services
-Container.bind('express', function(){
-  return require('express');
-});
-&nbsp;
-Container.bindShared('app', function(Container){
-  return Container.express();
-});
-&nbsp;
-Container.instance('router', Container.express.Router());
-&nbsp;
-Container.instance('EventBus', require('./Core/Events/EventBus.js'));
-&nbsp;
-Container.instance('Dispatcher', Container.EventBus);
-&nbsp;
-//Transformers
-Container.bind('Transformer', <span class="fstat-no" title="function not covered" >function(){</span>
-<span class="cstat-no" title="statement not covered" >  return require('model-transformer');</span>
-});
-&nbsp;
-&nbsp;
-module.exports = Container;
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
@@ -151,7 +160,7 @@ module.exports = Container;
   generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 28 2015 16:44:59 GMT-0500 (EST)
 </div>
 </div>
-<script src="../../prettify.js"></script>
+<script src="../../../prettify.js"></script>
 <script>
 window.onload = function () {
         if (typeof prettyPrint === 'function') {
@@ -159,6 +168,6 @@ window.onload = function () {
         }
 };
 </script>
-<script src="../../sorter.js"></script>
+<script src="../../../sorter.js"></script>
 </body>
 </html>

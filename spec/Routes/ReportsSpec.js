@@ -49,4 +49,16 @@ describe("ReportsSpec", function(){
   });
 
 
+  it("GET /tri/reports with NULL parameters (caused a crash)", function(done){
+    request(app)
+      .get('/tri/reports?groupBy=&operation=sum&agg_fields=fugitiveAir&filters=year%3A1987')
+      .set('Accept', 'application/json')
+      .expect(400)
+      .end(function(err, res){
+        console.log(res.body);
+        expect(res.body.errors.message).toEqual("Report requires the following query parameters: groupBy, operation, agg_fields");
+        done();
+      });
+  });
+
 });

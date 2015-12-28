@@ -108,9 +108,9 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
     var mandatory = ['groupBy', 'operation', 'agg_fields'];
 
     for(var x in mandatory){
-      if(! req.query.hasOwnProperty(mandatory[x])){
+      if(! req.query.hasOwnProperty(mandatory[x]) || req.query[mandatory[x]] == ''){
         Responder(res).respondBadRequest("Report requires the following query parameters: " + mandatory.join(", "));
-        break;
+        return;
       }
     }
 

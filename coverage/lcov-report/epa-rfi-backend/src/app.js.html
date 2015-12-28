@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">84.62% </span>
+        <span class="strong">57.69% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>22/26</span>
+        <span class='fraction'>15/26</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/4</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
-        <span class="quiet">Branches</span>
+        <span class="quiet">Functions</span>
         <span class='fraction'>2/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>3/4</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">84.62% </span>
+        <span class="strong">57.69% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>22/26</span>
+        <span class='fraction'>15/26</span>
       </div>
     </div>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -142,23 +142,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,24 +203,24 @@ app.use(<span class="fstat-no" title="function not covered" >function(req, res, 
 &nbsp;
 &nbsp;
 // 500 catch
-app.use(function(err, req, res, next){
-  var message = null;
-  var errors = {};
+app.use(<span class="fstat-no" title="function not covered" >function(err, req, res, next){</span>
+<span class="cstat-no" title="statement not covered" >  var message = null;</span>
+<span class="cstat-no" title="statement not covered" >  var errors = {};</span>
 &nbsp;
   // if in debug mode
-  <span class="missing-if-branch" title="else path not taken" >E</span>if(Container.config.debug){
-    message = err.message;
-    errors = {
+<span class="cstat-no" title="statement not covered" >  if(Container.config.debug){</span>
+<span class="cstat-no" title="statement not covered" >    message = err.message;</span>
+<span class="cstat-no" title="statement not covered" >    errors = {</span>
       message: err.toString(),
       stack: err.stack
     };
   }
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if(err instanceof HttpError){
+<span class="cstat-no" title="statement not covered" >  if(err instanceof HttpError){</span>
 <span class="cstat-no" title="statement not covered" >    res.status(err.httpCode)</span>
 <span class="cstat-no" title="statement not covered" >    res.json(err.message);</span>
   }else{
-    Responder(res).respondInternalError(message, errors);
+<span class="cstat-no" title="statement not covered" >    Responder(res).respondInternalError(message, errors);</span>
   }
 &nbsp;
 });
@@ -235,7 +235,7 @@ module.exports = Container;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 28 2015 12:12:30 GMT-0500 (EST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 28 2015 16:44:59 GMT-0500 (EST)
 </div>
 </div>
 <script src="../../prettify.js"></script>
