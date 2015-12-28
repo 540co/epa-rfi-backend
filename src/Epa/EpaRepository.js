@@ -40,17 +40,60 @@ function EpaRepository(client, Transformer){
       q: options.filters,
       size: options.limit,
       from: options.offset,
-      _source: fields
+      _source: fields,
+      body: {
+        "aggregations": {
+           "id": {
+             "terms": {"field": "facility.id", "size": options.limit}
+           }
+         }
+       }
     }, function(err, response){
       if(!err){
         options.total = response.hits.total;
         self._setMeta(options);
-        var data = response.hits.hits;
-        var data = response.hits.hits.map(function(hit){
-          return hit._source.facility;
+        var facility_ids = response.aggregations.id.buckets.map(function(bucket){
+          return bucket.key;
+        });
+console.log(facility_ids);
+        self._client.search({
+          index: _index,
+          type: _type,
+          body: {
+            "query" : {
+                "filtered" : {
+                    "filter" : {
+                        "terms" : {
+                            "facility.id" : facility_ids
+                        }
+                    }
+                }
+            }
+          }
+        }, function(err, subResponse){
+
+          var data = null;
+          if(!err){
+            // Transform
+            data = subResponse.hits.hits.map(function(hit){
+              return hit._source.facility;
+            });
+            // Get uniques
+            var uniques = [];
+            data = data.filter(function(facility){
+              //
+              var exists = uniques.indexOf(facility.id) > -1 ? true : false;
+              if(exists){
+                return false;
+              }else{
+                uniques.push(facility.id);
+                return true;
+              }
+            });
+          }
+          callback(err, data);
         });
       }
-      callback(err, data);
     });
   }
 
