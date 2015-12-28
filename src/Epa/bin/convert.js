@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 var Container = require('../../bootstrap.js');
 var Converter = Container.Converter;
 

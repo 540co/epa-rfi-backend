@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 var Container = require('../../bootstrap.js');
 var transformer = Container.TriTransformer;
 var year = process.argv[2];

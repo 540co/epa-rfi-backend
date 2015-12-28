@@ -1,3 +1,4 @@
+//*
 var request = require('supertest');
 var Container = require("../../src/app.js");
 var app = Container.app;
@@ -74,20 +75,6 @@ describe("FacilitiesSpec", function(){
   });
 
 
-  it("GET /tri/facilities?limit=150 returns a max of 100", function(done){
-    request(app)
-      .get('/tri/facilities?limit=150')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .end(function(err, res){
-        var facilities = res.body.data;
-        expect(facilities.length).toEqual(100);
-        expect(res.body.meta.limit).toEqual(100);
-        done();
-      });
-  });
-
-
   it("GET /tri/facilities/{no such facility} returns 404", function(done){
     request(app)
       .get('/tri/facilities/1234')
@@ -100,3 +87,4 @@ describe("FacilitiesSpec", function(){
   });
 
 });
+//*/

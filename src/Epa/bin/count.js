@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 
 var year = process.argv[2];
 var file = "CLEANED_TRI_" + year + "_US";

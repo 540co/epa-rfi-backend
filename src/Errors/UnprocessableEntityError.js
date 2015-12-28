@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 var HttpError = require('./HttpError.js');
 
 function UnprocessableEntity(message){

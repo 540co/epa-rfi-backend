@@ -55,7 +55,7 @@ function EpaRepository(client, Transformer){
         var facility_ids = response.aggregations.id.buckets.map(function(bucket){
           return bucket.key;
         });
-console.log(facility_ids);
+
         self._client.search({
           index: _index,
           type: _type,

@@ -197,7 +197,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
     });
   });
 
-
+/*
   app.post('/tri/es_search', function(req, res){
     var client = Repo._client;
 
@@ -240,7 +240,7 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
       }
     });
   });
-
+*/
 
   return app;
 }

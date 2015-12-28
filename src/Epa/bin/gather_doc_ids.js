@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 var Container = require('../../app.js');
 var client = Container.client;
 var request = require('request');

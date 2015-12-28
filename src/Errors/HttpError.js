@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 function HttpError(message) {
 
     this.name = 'HttpError';

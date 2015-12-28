@@ -1,3 +1,5 @@
+/* istanbul ignore next */
+
 var fs = require('fs');
 
 var year = process.argv[2];

@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 
 var Container = require('../../bootstrap.js');
 var Repo = Container.EpaRepository;

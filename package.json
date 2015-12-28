@@ -4,7 +4,7 @@
   "description": "JSON Schema data store using Elastic Search",
   "main": "app.js",
   "scripts": {
-    "test": "jasmine",
+    "test": "jasmine | istanbul cover jasmine",
     "start": "node src/app.js"
   },
   "author": "Aaron Bullard <aaron@540.co>",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "async": "^1.5.0",
     "csvtojson": "^0.5.0",
+    "istanbul": "^0.4.1",
     "jasmine": "^2.3.2",
     "jsonschema-validator": "^0.4.1",
     "node-model-factory": "^1.0.0",
