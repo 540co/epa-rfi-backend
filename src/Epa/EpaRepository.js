@@ -54,16 +54,15 @@ function EpaRepository(client, Transformer){
         });
 
         options.total = facility_ids.length;
-        var limit = options.limit || facility_ids.length;
+        var limit = options.limit || 100;
         var offset = start = options.offset || 0;
         var end = start + limit;
         // Apply limit and offset to array of facility_ids
-        var sub_facility_ids = facility_ids.slice(offset, end);
+        var sub_facility_ids = facility_ids.slice(start, end);
 
         self._client.search({
           index: _index,
           type: _type,
-          q: options.filters,
           size: 9999,
           body: {
             "query" : {
