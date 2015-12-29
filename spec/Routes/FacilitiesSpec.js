@@ -6,6 +6,13 @@ var app = Container.app;
 
 describe("FacilitiesSpec", function(){
 
+  var originalTimeout;
+
+  beforeEach(function() {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
+  });
+
   it("GET /tri/facilities", function(done){
     request(app)
       .get('/tri/facilities?limit=30')
@@ -87,6 +94,10 @@ describe("FacilitiesSpec", function(){
         expect(res.body.errors.message).toEqual("Not Found!");
         done();
       });
+  });
+
+  afterEach(function() {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
 });

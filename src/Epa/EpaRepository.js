@@ -63,6 +63,7 @@ function EpaRepository(client, Transformer){
         self._client.search({
           index: _index,
           type: _type,
+          q: options.filters,
           size: 9999,
           body: {
             "query" : {

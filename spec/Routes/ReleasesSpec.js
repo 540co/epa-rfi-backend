@@ -1,36 +1,18 @@
 var request = require('supertest');
-var SchemaValidator = require('jsonschema-validator').Validator;
-
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
-var swagger = require('../../src/Epa/lib/swagger/epa-swagger.json');
-
-
-function Validator(validator){
-
-  this.validator = validator;
-
-  this.validate = function(instance, schema){
-    var v = this.validator.validate(instance, schema);
-    return ! v.errors.length;
-  }
-}
 
 
 describe("ReleasesSpec", function(){
 
-  var validator;
+  var originalTimeout;
 
-  beforeEach(function(){
-    validator = new Validator(new SchemaValidator());
+  beforeEach(function() {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
   });
 
   it("GET /tri/releases", function(done){
-    var schema = swagger.definitions.Release;
-    schema.definitions = {};
-    schema.definitions.Facility = swagger.definitions.Facility;
-    schema.definitions.NaicsCodes = swagger.definitions.NaicsCodes;
-
     request(app)
       .get('/tri/releases?limit=30')
       .set('Accept', 'application/json')
@@ -38,7 +20,6 @@ describe("ReleasesSpec", function(){
       .end(function(err, res){
         expect(res.body.data[0].hasOwnProperty('documentControlNumber')).toEqual(true);
         expect(res.body.meta.limit).toEqual(30);
-        // expect(validator.validate(res.body.data[0], schema)).toEqual(true);
         done();
       });
   });
@@ -113,6 +94,10 @@ describe("ReleasesSpec", function(){
         expect(res.headers['access-control-allow-origin']).toEqual('*');
         done();
       });
+  });
+
+  afterEach(function() {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
 });

@@ -5,6 +5,13 @@ var app = Container.app;
 
 describe("ReportsSpec", function(){
 
+  var originalTimeout;
+
+  beforeEach(function() {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+  });
+
   it("GET /tri/reports with parameters", function(done){
     request(app)
       .get('/tri/reports?limit=3&groupBy=facility.address.state&operation=sum&agg_fields=quantitiesEnteringEnvironment.fugitiveAir,quantitiesEnteringEnvironment.stackAir')
@@ -58,6 +65,10 @@ describe("ReportsSpec", function(){
         expect(res.body.errors.message).toEqual("Report requires the following query parameters: groupBy, operation, agg_fields");
         done();
       });
+  });
+
+  afterEach(function() {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
 });

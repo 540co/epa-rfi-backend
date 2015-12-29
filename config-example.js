@@ -14,10 +14,6 @@ module.exports = {
        levels: ['error', 'warning']
      }]
    }
- },
-
- service_providers: [
-   './Epa/EpaServiceProvider.js'
- ]
-
+ }
+ 
 }
