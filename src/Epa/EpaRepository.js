@@ -38,13 +38,12 @@ function EpaRepository(client, Transformer){
       index: _index,
       type: _type,
       q: options.filters,
-      size: options.limit,
-      from: options.offset,
+      size: 0,
       _source: fields,
       body: {
         "aggregations": {
            "id": {
-             "terms": {"field": "facility.id", "size": options.limit}
+             "terms": {"field": "facility.id", "size": 0}
            }
          }
        }
@@ -56,6 +55,12 @@ function EpaRepository(client, Transformer){
           return bucket.key;
         });
 
+        var limit = options.limit || facility_ids.length;
+        var offset = start = options.offset || 0;
+        var end = start + limit;
+        // Apply limit and offset to array of facility_ids
+        var sub_facility_ids = facility_ids.slice(offset, end);
+
         self._client.search({
           index: _index,
           type: _type,
@@ -64,7 +69,7 @@ function EpaRepository(client, Transformer){
                 "filtered" : {
                     "filter" : {
                         "terms" : {
-                            "facility.id" : facility_ids
+                            "facility.id" : sub_facility_ids
                         }
                     }
                 }

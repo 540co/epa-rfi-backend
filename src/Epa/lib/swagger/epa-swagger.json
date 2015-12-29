@@ -493,7 +493,7 @@
     "filters": {
       "name": "filters",
       "in": "query",
-      "description": "Filter the data using Lucene ex. filters=facility.state:NC AND year:2009",
+      "description": "Filter the data using Lucene ex. filters=facility.address.state:NC AND year:2009",
       "type": "string"
     },
 

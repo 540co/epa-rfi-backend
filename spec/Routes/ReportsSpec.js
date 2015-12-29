@@ -55,7 +55,6 @@ describe("ReportsSpec", function(){
       .set('Accept', 'application/json')
       .expect(400)
       .end(function(err, res){
-        console.log(res.body);
         expect(res.body.errors.message).toEqual("Report requires the following query parameters: groupBy, operation, agg_fields");
         done();
       });
