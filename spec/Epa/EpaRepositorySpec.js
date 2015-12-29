@@ -25,7 +25,7 @@ describe("EpaRepository", function(){
 
   it("getReleases", function(done){
     repo.getReleases({filters:"facility.address.state:NC", limit: 25}, function(err, data){
-    console.log(data);
+console.log(err);
       expect(data.length > 0).toEqual(true);
       expect(data.length).toEqual(25);
       data.forEach(function(release){
