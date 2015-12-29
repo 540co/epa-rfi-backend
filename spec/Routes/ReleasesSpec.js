@@ -1,7 +1,7 @@
 var request = require('supertest');
 var SchemaValidator = require('jsonschema-validator').Validator;
 
-var Container = require("../../src/app.js");
+var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 var swagger = require('../../src/Epa/lib/swagger/epa-swagger.json');
 

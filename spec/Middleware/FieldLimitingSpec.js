@@ -1,5 +1,5 @@
 var request = require('supertest');
-var Container = require("../../src/app.js");
+var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
 describe("Middleware/FieldLimitingSpec", function(){

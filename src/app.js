@@ -1,3 +1,5 @@
+'use strict';
+/*/
 var Container = require('./bootstrap.js');
 var app = Container.app;
 var Responder = Container.Responder;
@@ -55,8 +57,8 @@ app.use(function(err, req, res, next){
   }
 
 });
+//*/
 
+var Container = require('./bootstrap.js');
 
-app.listen(process.env.PORT || 3000);
-
-module.exports = Container;
+Container.app.listen(process.env.PORT || 3000);

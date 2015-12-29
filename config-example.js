@@ -4,6 +4,8 @@ module.exports = {
 
  capture_versions: false,
 
+ max_limit: 100,
+
  db: {
    elastic: {
      host: 'localhost:9200',

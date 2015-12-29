@@ -1,4 +1,4 @@
-var Container = require("../../src/app.js");
+var Container = require("../../src/bootstrap.js");
 var repo = Container.EpaRepository;
 
 describe("EpaRepository", function(){
