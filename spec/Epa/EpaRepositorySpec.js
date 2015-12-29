@@ -14,7 +14,7 @@ describe("EpaRepository", function(){
   });
 
 
-  it("getFacilities without duplicates", function(done){
+  fit("getFacilities without duplicates", function(done){
     repo.getFacilities({
       filters:"facility.address.state:NC",
       limit: 100

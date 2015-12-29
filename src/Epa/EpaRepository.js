@@ -52,6 +52,7 @@ function EpaRepository(client, Transformer){
         var facility_ids = response.aggregations.id.buckets.map(function(bucket){
           return bucket.key;
         });
+
         options.total = facility_ids.length;
         var limit = options.limit || facility_ids.length;
         var offset = start = options.offset || 0;
@@ -62,6 +63,7 @@ function EpaRepository(client, Transformer){
         self._client.search({
           index: _index,
           type: _type,
+          size: 9999,
           body: {
             "query" : {
                 "filtered" : {
@@ -81,10 +83,10 @@ function EpaRepository(client, Transformer){
             data = subResponse.hits.hits.map(function(hit){
               return hit._source.facility;
             });
+
             // Get uniques
             var uniques = [];
             data = data.filter(function(facility){
-              //
               var exists = uniques.indexOf(facility.id) > -1 ? true : false;
               if(exists){
                 return false;
