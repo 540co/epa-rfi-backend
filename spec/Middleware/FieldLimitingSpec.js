@@ -2,7 +2,7 @@ var request = require('supertest');
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
-describe("Middleware/FieldLimitingSpec", function(){
+xdescribe("Middleware/FieldLimitingSpec", function(){
 
   it("GET /tri/releases?fields=facility (field limiting)", function(done){
     request(app)

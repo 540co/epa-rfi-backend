@@ -1,7 +1,7 @@
 var Container = require("../../src/bootstrap.js");
 var repo = Container.EpaRepository;
 
-describe("EpaRepository", function(){
+xdescribe("EpaRepository", function(){
 
   var originalTimeout;
 

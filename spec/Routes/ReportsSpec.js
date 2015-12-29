@@ -3,7 +3,7 @@ var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
 
-describe("ReportsSpec", function(){
+xdescribe("ReportsSpec", function(){
 
   var originalTimeout;
 

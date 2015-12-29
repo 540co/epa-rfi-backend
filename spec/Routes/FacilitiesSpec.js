@@ -4,7 +4,7 @@ var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
 
-describe("FacilitiesSpec", function(){
+xdescribe("FacilitiesSpec", function(){
 
   var originalTimeout;
 
