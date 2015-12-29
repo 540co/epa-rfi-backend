@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 
-var Container = require('../../bootstrap.js');
+var Container = require('../../app.js');
 var client = Container.client;
 var mapping = require('../lib/elastic/epa-tri_mapping.json');
 
@@ -15,13 +15,13 @@ function callback(err, response){
 
 // Create index
 client.indices.create({
-  index: 'epa-tri'
+  index: 'epa-release'
 }, function(err, res){
   // if(err) throw err;
 
   // Add Mapping
   client.indices.putMapping({
-    index: 'epa-tri',
+    index: 'epa-release',
     type: 'records',
     body: body
   }, callback);
