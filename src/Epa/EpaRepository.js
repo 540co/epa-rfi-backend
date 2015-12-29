@@ -39,7 +39,6 @@ function EpaRepository(client, Transformer){
       type: _type,
       q: options.filters,
       size: 0,
-      _source: fields,
       body: {
         "aggregations": {
            "id": {
