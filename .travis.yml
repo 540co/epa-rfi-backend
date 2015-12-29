@@ -12,9 +12,10 @@ cache:
 before_script:
 - npm install
 script:
-- ls
+- npm test
 after_success:
 - "./deploy.sh"
+- codeclimate-test-reporter < ./coverage/lcov.info
 notifications:
   slack:
     secure: CxucIkrtQCB0fuV9Mi4C8/dcDlKMoqzUFFHzUucnkd0vH2yvyF1uRELa6A3kbWROPF/ShwLDobsvYJatpTya/a+dwwoziQA5gwChBnx/KGXzQJq3gu1Ux0ZNATEDWePT6QjNELtEcFiMPlL1ijnePuz/kcK8RmMgbtuRQhbf9dI5JZZptHOv5StBiE168dFdScSNQy1UBnb7u/fGD7gVr/nQPfyJ5q1KKMjeg9Yr9wNpynpkcva8HqMuiQ+OVqmRltf+N3Q3uy1zl7Ss/hVe0IEPCAcKsopzhnXf+3LLrvtGTWYluh/SCcs2EapNAxxs+qmLlpfzcr00DSY43oWDdyjMWNoDkI3N277WSrZQyOaRg6kpkkttiBy4v0/u6OKYMchkkYV9zbrxnnNq1YGVsFc4/ufUUlIXtz/ohQAXxHdIHXIcgeGr+vaqN4ax+c2A+Cz8tK2y4M0a7BI8RL4fMk0h10kMLfOXcEuwkm9X4KQWAmzdCzl3TYCQjC++cjnNESFHuQlxTo+txqoCKSvAgyWmnaspf33oUQgukMq+Ky6/wDZFLifxjowOU4O6HY2UlVVbEbnuNoMrXzuSwa3jHTbvPQcMUw5UyjpaMdQ1/WO4G6Kol5UJ1b6hduuJT3Wz0RJy5ndI6lZPxcmcKE/o5RpigJ3A8JyD0IWvs5hDn9U=
