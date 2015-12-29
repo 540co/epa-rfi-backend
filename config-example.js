@@ -1,8 +1,8 @@
 module.exports = {
 
- debug: true,
+ debug: false,
 
- capture_versions: true,
+ capture_versions: false,
 
  db: {
    elastic: {
