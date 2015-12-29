@@ -49,12 +49,10 @@ function EpaRepository(client, Transformer){
        }
     }, function(err, response){
       if(!err){
-        options.total = response.hits.total;
-        self._setMeta(options);
         var facility_ids = response.aggregations.id.buckets.map(function(bucket){
           return bucket.key;
         });
-
+        options.total = facility_ids.length;
         var limit = options.limit || facility_ids.length;
         var offset = start = options.offset || 0;
         var end = start + limit;
@@ -96,6 +94,7 @@ function EpaRepository(client, Transformer){
               }
             });
           }
+          self._setMeta(options);
           callback(err, data);
         });
       }
