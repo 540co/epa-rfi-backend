@@ -4,7 +4,6 @@ module.exports = function(app, Responder, Repo, DotObjectTransformer){
     return req.query.fields ? req.query.fields.split(',') : [];
   }
 
-
   // SWAGGER
   app.get('/tri/swagger.json', function(req, res){
     var swagger = require('./lib/swagger/epa-swagger.json');
