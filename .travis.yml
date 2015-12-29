@@ -11,6 +11,7 @@ cache:
   - node_modules
 before_script:
 - npm install
+- cp config-example.js config.js
 script:
 - npm test
 after_success:
