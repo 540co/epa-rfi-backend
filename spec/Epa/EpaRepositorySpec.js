@@ -4,8 +4,9 @@ var repo = Container.EpaRepository;
 describe("EpaRepository", function(){
 
   it("getFacilities", function(done){
-    repo.getFacilities({filters:"facility.address.state:NC"}, function(err, data){
+    repo.getFacilities({filters:"facility.address.state:NC", limit: 25}, function(err, data){
       expect(data.length > 0).toEqual(true);
+      expect(data.length).toEqual(25);
       data.forEach(function(facility){
         expect(facility.address.state).toEqual("NC");
       });
@@ -14,7 +15,15 @@ describe("EpaRepository", function(){
   });
 
 
-  fit("getFacilities without duplicates", function(done){
+  it("getFacilities", function(done){
+    repo.getFacilities({limit: 25}, function(err, data){
+      expect(data.length).toEqual(25);
+      done();
+    });
+  });
+
+
+  it("getFacilities without duplicates", function(done){
     repo.getFacilities({
       filters:"facility.address.state:NC",
       limit: 100
