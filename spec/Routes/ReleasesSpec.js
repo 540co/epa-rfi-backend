@@ -17,7 +17,7 @@ describe("ReleasesSpec", function(){
       .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
-        expect(res.body.data[0].hasOwnProperty('documentControlNumber')).toEqual(true);
+        expect(res.body.data[0].documentControlNumber).toBeDefined();
         expect(res.body.meta.limit).toEqual(3);
         done();
       });

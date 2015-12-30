@@ -1,7 +1,7 @@
 {
-  "name": "bigcropping-api",
+  "name": "epa-rfi-backend",
   "version": "0.0.1",
-  "description": "JSON Schema data store using Elastic Search",
+  "description": "EPA TRI Program",
   "main": "app.js",
   "scripts": {
     "test": "jasmine | istanbul cover jasmine --root ./src",
