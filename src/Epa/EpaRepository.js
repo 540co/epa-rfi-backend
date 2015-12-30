@@ -63,6 +63,7 @@ function EpaRepository(client, Transformer){
           index: _index,
           type: _type,
           size: 9999,
+          _source: 'facility',
           body: {
             "query" : {
                 "filtered" : {

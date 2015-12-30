@@ -1,15 +1,14 @@
+var nock = require('nock');
 var request = require('supertest');
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
+describe("ReportsSpec", function(){
 
-xdescribe("ReportsSpec", function(){
+  var n = require('../support/nocks/Routes/ReportsSpecNock.js')(nock);
 
-  var originalTimeout;
-
-  beforeEach(function() {
-    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+  afterAll(function(){
+    n.cleanAll();
   });
 
   it("GET /tri/reports with parameters", function(done){
@@ -19,10 +18,11 @@ xdescribe("ReportsSpec", function(){
       .expect(200)
       .end(function(err, res){
         var reports = res.body.data;
-        // expect(reports.length).toEqual(3);
-        expect(reports[0].facility.address.hasOwnProperty('state')).toEqual(true);
-        expect(reports[0].quantitiesEnteringEnvironment.hasOwnProperty('fugitiveAir')).toEqual(true);
-        expect(reports[0].quantitiesEnteringEnvironment.hasOwnProperty('stackAir')).toEqual(true);
+        reports.forEach(function(report){
+          expect(report.facility.address.state).toBeDefined();
+          expect(report.quantitiesEnteringEnvironment.fugitiveAir).toBeDefined();
+          expect(report.quantitiesEnteringEnvironment.stackAir).toBeDefined();
+        });
         done();
       });
   });
@@ -65,10 +65,6 @@ xdescribe("ReportsSpec", function(){
         expect(res.body.errors.message).toEqual("Report requires the following query parameters: groupBy, operation, agg_fields");
         done();
       });
-  });
-
-  afterEach(function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
 });

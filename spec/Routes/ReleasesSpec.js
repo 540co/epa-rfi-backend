@@ -1,35 +1,32 @@
+var nock = require('nock');
 var request = require('supertest');
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
+describe("ReleasesSpec", function(){
 
-xdescribe("ReleasesSpec", function(){
+  var n = require('../support/nocks/Routes/ReleasesSpecNock.js')(nock);
 
-  var originalTimeout;
-
-  beforeEach(function() {
-    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+  afterAll(function(){
+    n.cleanAll();
   });
 
   it("GET /tri/releases", function(done){
     request(app)
-      .get('/tri/releases?limit=30')
+      .get('/tri/releases?limit=3')
       .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
         expect(res.body.data[0].hasOwnProperty('documentControlNumber')).toEqual(true);
-        expect(res.body.meta.limit).toEqual(30);
+        expect(res.body.meta.limit).toEqual(3);
         done();
       });
   });
 
 
   it("GET /tri/releases/:doc_control_num", function(done){
-    var doc_control_num = "1234";
-
     request(app)
-      .get('/tri/releases?limit=30')
+      .get('/tri/releases?limit=3')
       .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
@@ -46,9 +43,9 @@ xdescribe("ReleasesSpec", function(){
   });
 
 
-  it("GET /tri/releases?filters=facility.address.state:NC", function(done){
+  it("GET /tri/releases?filters=facility.address.state:NC&limit=2", function(done){
     request(app)
-      .get('/tri/releases?filters=facility.address.state:NC')
+      .get('/tri/releases?filters=facility.address.state:NC&limit=2')
       .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
@@ -68,6 +65,9 @@ xdescribe("ReleasesSpec", function(){
       .end(function(err, res){
         expect(res.body.data.length).toEqual(100);
         expect(res.body.meta.limit).toEqual(100);
+        res.body.data.forEach(function(release){
+          expect(release.documentControlNumber).toBeDefined();
+        });
         done();
       });
   });
@@ -75,7 +75,7 @@ xdescribe("ReleasesSpec", function(){
 
   it("GET /tri/releases/{no such doc} returns 404", function(done){
     request(app)
-      .get('/tri/releases/1234')
+      .get('/tri/releases/4321')
       .set('Accept', 'application/json')
       .expect(404)
       .end(function(err, res){
@@ -87,7 +87,7 @@ xdescribe("ReleasesSpec", function(){
 
   it("has enabled cors", function(done){
     request(app)
-      .get('/tri/releases')
+      .get('/tri/releases?limit=3')
       .set('Accept', 'application/json')
       .expect(200)
       .end(function(err, res){
@@ -96,8 +96,5 @@ xdescribe("ReleasesSpec", function(){
       });
   });
 
-  afterEach(function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-  });
 
 });

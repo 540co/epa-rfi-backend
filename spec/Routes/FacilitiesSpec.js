@@ -1,16 +1,17 @@
 //*
+var nock = require('nock');
 var request = require('supertest');
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
 
 
-xdescribe("FacilitiesSpec", function(){
 
-  var originalTimeout;
+describe("FacilitiesSpec", function(){
 
-  beforeEach(function() {
-    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
+  var n = require('../support/nocks/Routes/FacilitiesSpecNock.js')(nock);
+
+  afterAll(function(){
+    n.cleanAll();
   });
 
   it("GET /tri/facilities", function(done){
@@ -20,8 +21,8 @@ xdescribe("FacilitiesSpec", function(){
       .expect(200)
       .end(function(err, res){
         var facility = res.body.data[0];
-        expect(facility.hasOwnProperty('id')).toEqual(true);
-        expect(facility.hasOwnProperty('address')).toEqual(true);
+        expect(facility.id).toBeDefined();
+        expect(facility.address).toBeDefined();
         expect(res.body.meta.limit).toEqual(30);
         done();
       });
@@ -96,9 +97,4 @@ xdescribe("FacilitiesSpec", function(){
       });
   });
 
-  afterEach(function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-  });
-
 });
-//*/

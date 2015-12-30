@@ -23,6 +23,7 @@
     "istanbul": "^0.4.1",
     "jasmine": "^2.3.2",
     "jsonschema-validator": "^0.4.1",
+    "nock": "^3.6.0",
     "node-model-factory": "^1.0.0",
     "request": "^2.67.0",
     "supertest": "^1.1.0"
