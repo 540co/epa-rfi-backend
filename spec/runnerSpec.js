@@ -1,6 +1,6 @@
 //"**/*[sS]pec.js" changed to runnerSpec.js
 
-describe("EPA RFI Backend", function(done){
+describe("EPA RFI Backend", function(){
 
 /*/
   var nock = require('nock');
