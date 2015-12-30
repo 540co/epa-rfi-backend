@@ -1,12 +1,14 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "EPA Toxic Release Inventory (TRI) Program",
+    "description": "EPA Toxic Release Inventory (TRI) Program. You can download the data in csv format <a href='http://www.epa.gov/toxics-release-inventory-tri-program/tri-basic-data-files-calendar-years-1987-2014'>here</a>.",
     "version": "1.0.0",
     "title": "EPA TRI Program",
     "termsOfService": "",
     "contact": {
-      "email": "aaron@540.co"
+      "name": "540",
+      "email": "jobrieniii@540.co",
+      "url": "https://540.co"
     }
   },
   "host": "",
