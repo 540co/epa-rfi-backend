@@ -27,6 +27,9 @@ describe("EPA RFI Backend", function(done){
 
 //*/
 
+  // src
+  require('./bootstrapSpec.js');
+
   // Core
   require('./Core/Container/ContainerSpec.js');
   require('./Core/Events/EventBusSpec.js');
@@ -36,6 +39,9 @@ describe("EPA RFI Backend", function(done){
   require('./Middleware/CorsSpec.js');
   require('./Middleware/FieldLimitingSpec.js');
 
+  // Errors
+  require('./Errors/HttpErrorSpec.js');
+
   // Epa
   require('./Epa/EpaRepositorySpec.js');
 
@@ -43,5 +49,6 @@ describe("EPA RFI Backend", function(done){
   require('./Routes/ReleasesSpec.js');
   require('./Routes/FacilitiesSpec.js');
   require('./Routes/ReportsSpec.js');
+  require('./Routes/SwaggerSpec.js');
 
 });

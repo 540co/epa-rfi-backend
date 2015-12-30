@@ -1,3 +1,4 @@
+/*
 var request = require('supertest');
 var Container = require("../../src/bootstrap.js");
 var app = Container.app;
@@ -66,3 +67,4 @@ xdescribe("Middleware/FieldLimitingSpec", function(){
       });
   });
 });
+*/
