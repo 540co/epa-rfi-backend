@@ -8,6 +8,8 @@ var app = Container.app;
 
 describe("FacilitiesSpec", function(){
 
+  require('../support/nocks/Routes/FacilitiesSpecNock.js')(nock);
+
   it("GET /tri/facilities", function(done){
     request(app)
       .get('/tri/facilities?limit=30')

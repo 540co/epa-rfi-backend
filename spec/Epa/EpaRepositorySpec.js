@@ -5,6 +5,8 @@ var repo = Container.EpaRepository;
 
 describe("EpaRepository", function(){
 
+  require('../support/nocks/Epa/EpaRepositorySpecNock.js')(nock);
+
   it("getFacilities", function(done){
     repo.getFacilities({filters:"facility.address.state:NC", limit: 25}, function(err, data){
       expect(data.length > 0).toEqual(true);

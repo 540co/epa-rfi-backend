@@ -4,30 +4,19 @@
 describe("EPA RFI Backend", function(){
 
 /*/
-  var nock = require('nock');
-  var fs = require('fs');
-  var file = './spec/support/nocks/Routes/FacilitiesSpecNock.js';
+  var Recorder = require('./support/nock_recorder.js');
 
   beforeAll(function(){
-
-    fs.appendFileSync(file, "module.exports = function(nock){ \n");
-
-    var appendLogToFile = function(content) {
-      fs.appendFileSync(file, content);
-    }
-    nock.recorder.rec({
-      use_separator: false,
-      logging: appendLogToFile,
-    });
-
+    Recorder.beginRecordingTo("./test_recording.js");
   });
 
   afterAll(function(){
-    fs.appendFileSync(file, "\nreturn nock; \n};");
+    Recorder.stop();
   });
-
 //*/
 
+
+//*/
   // src
   require('./bootstrapSpec.js');
 
@@ -38,7 +27,6 @@ describe("EPA RFI Backend", function(){
 
   // Middleware
   require('./Middleware/CorsSpec.js');
-  require('./Middleware/FieldLimitingSpec.js');
 
   // Errors
   require('./Errors/HttpErrorSpec.js');
@@ -51,5 +39,5 @@ describe("EPA RFI Backend", function(){
   require('./Routes/FacilitiesSpec.js');
   require('./Routes/ReportsSpec.js');
   require('./Routes/SwaggerSpec.js');
-
+//*/
 });
