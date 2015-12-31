@@ -5,12 +5,6 @@ var app = Container.app;
 
 describe("ReleasesSpec", function(){
 
-  var n = require('../support/nocks/Routes/ReleasesSpecNock.js')(nock);
-
-  afterAll(function(){
-    n.cleanAll();
-  });
-
   it("GET /tri/releases", function(done){
     request(app)
       .get('/tri/releases?limit=3')

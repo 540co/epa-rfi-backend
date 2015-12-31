@@ -5,12 +5,6 @@ var app = Container.app;
 
 describe("ReportsSpec", function(){
 
-  var n = require('../support/nocks/Routes/ReportsSpecNock.js')(nock);
-
-  afterAll(function(){
-    n.cleanAll();
-  });
-
   it("GET /tri/reports with parameters", function(done){
     request(app)
       .get('/tri/reports?limit=3&groupBy=facility.address.state&operation=sum&agg_fields=quantitiesEnteringEnvironment.fugitiveAir,quantitiesEnteringEnvironment.stackAir')
