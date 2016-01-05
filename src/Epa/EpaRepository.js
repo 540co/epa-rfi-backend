@@ -2,7 +2,7 @@ var Repository = require(__dirname + "/../Core/Repositories/Repository");
 
 function EpaRepository(client, Transformer){
 
-  var _index = 'epa-tri';
+  var _index = 'epa-release';
   var _type = 'records';
   var self = this;
 

@@ -48,7 +48,7 @@ module.exports = {
 
 Air Hound API requires an Elasticsearch instance running at the host as configured in config.json.  For example, the config above has designated an Elasticsearch db at config.db.elastic.host.
 
-Elasticsearch should contain the TRI Basic Data under a 'epa-tri' index and 'records' type.
+Elasticsearch should contain the TRI Basic Data under a 'epa-release' index and 'records' type.
 
 #### Starting Server
 
